@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import FormSelect from 'react-bootstrap/esm/FormSelect';
+import FormSelect from 'react-bootstrap/FormSelect';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
@@ -9,28 +9,29 @@ const SupplierForm = ({ initialData = {}, onSave }) => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [category, setCategory] = useState('');
+  const [cuit, setCuit] = useState('');
 
   useEffect(() => {
-    // Update state with initialData only when it changes
     setName(initialData.name || '');
     setPhone(initialData.phone || '');
     setEmail(initialData.email || '');
     setCategory(initialData.category || '');
+    setCuit(initialData.cuit || ''); 
   }, [initialData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ name, phone, email, category });
-    // Reset form fields after saving
+    onSave({ name, phone, email, category, cuit });
     setName('');
     setPhone('');
     setEmail('');
     setCategory('');
+    setCuit('');
   };
 
   return (
     <div> 
-      <h3>Agregar Proveedor</h3>
+      <h3>{initialData.id ? 'Editar Proveedor' : 'Agregar Proveedor'}</h3>
     
     <Form className='my-3' onSubmit={handleSubmit}>
       <Row className='justify-content-center'>
@@ -88,7 +89,21 @@ const SupplierForm = ({ initialData = {}, onSave }) => {
         </Form.Group>
       </Row>
 
-      <Button className=' btn-success' type="submit">Guardar</Button>
+      <Row className='justify-content-center'>
+        <Form.Group className="mb-3 col-4">
+          <Form.Label>CUIT</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='10-12345678-9'
+            value={cuit}
+            onChange={(e) => setCuit(e.target.value)}
+            autoComplete='cuit'
+            required
+          />
+        </Form.Group>
+      </Row>
+
+      <Button className='btn-success' type="submit">Guardar</Button>
     </Form>
     </div>
   );
