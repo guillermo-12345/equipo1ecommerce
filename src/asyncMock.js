@@ -100,6 +100,7 @@ let SUPPLIERS = [
 	  phone: "123456789",
 	  email: "proveedor1@example.com",
 	  category: "notebook",
+	  cuit: "20-12345678-9",
 	},
 	{
 	  id: 2,
@@ -107,6 +108,7 @@ let SUPPLIERS = [
 	  phone: "987654321",
 	  email: "proveedor2@example.com",
 	  category: "celular",
+	  cuit: "27-23456789-0",
 	},
 	{
 	  id: 3,
@@ -114,8 +116,10 @@ let SUPPLIERS = [
 	  phone: "456789123",
 	  email: "proveedor3@example.com",
 	  category: "tablet",
+	  cuit: "30-34567890-1",
 	},
   ];
+  
   
   export const getSuppliers = () => {
 	return new Promise((resolve) => {
