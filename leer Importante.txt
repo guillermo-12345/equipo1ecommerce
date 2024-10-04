@@ -1,0 +1,27 @@
+para levantar la app seguir los siguientes pasos
+
+abrir dos terminales
+
+-----------------------------
+instalar las dependencias
+------------------------------
+
+en una hacer "cd frontEnd"  luego npm i 
+
+en la segunda hacer "cd backEnd" luego npm i
+
+------------------------------
+Levantar la app
+------------------------------
+en la primera terminal (donde se hizo  cd frontEnd)
+  escribir " npm start "
+
+en la segunda terminal (donde se hizo cd backEnd)
+  escribir " node server.js "  
+
+
+Importante!!!!!
+****************************************************************************************
+si se instalaron correctamente las dependencias  el servidor arrancara correctamente 
+de lo contrario no lo hara
+****************************************************************************************
