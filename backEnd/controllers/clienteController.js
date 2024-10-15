@@ -1,8 +1,19 @@
 const conexion = require("../db/conection");
+// function createCliente(req, res) {
+//     console.log(req.body); 
+//     const { nombre, cuit, correo } = req.body; 
+//     const query = 'INSERT INTO clientes (nombre, cuit, correo) VALUES (?, ?, ?)';
 
-
+//     conexion.query(query, [nombre, cuit, correo], (err, result) => {
+//         if (err) {
+//             console.log(err);
+//             return res.status(500).send("Error al crear el cliente"); 
+//         } else {
+//             return res.status(200).json(result);
+//         }
+//     });
+// }
 function createCliente(req, res) {
-    console.log(req.body); 
     const { nombre, cuit, correo } = req.body; 
     const query = 'INSERT INTO clientes (nombre, cuit, correo) VALUES (?, ?, ?)';
 
@@ -11,7 +22,9 @@ function createCliente(req, res) {
             console.log(err);
             return res.status(500).send("Error al crear el cliente"); 
         } else {
-            return res.status(200).json(result);
+            
+            const nuevoCliente = { id: result.insertId, nombre, cuit, correo };
+            return res.status(201).json(nuevoCliente); 
         }
     });
 }

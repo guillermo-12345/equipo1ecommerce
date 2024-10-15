@@ -1,0 +1,3 @@
+si no arranca es porque probablemente
+no se siguieron los pasos del archivo " leer Importante "
+si la aplicacion arranca, no se que hace leyendo esto
