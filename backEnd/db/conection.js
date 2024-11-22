@@ -4,8 +4,8 @@ const dbConfig = {
     host: 'localhost',
     port: '3306',
     user: 'root',
-    password: 'MordeDB',
-    database: 'mordekaiser'
+    password: 'MordoDB',
+    database: 'dbtp2'
 };
 
 const conexion = mysql.createConnection(dbConfig);
