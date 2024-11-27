@@ -4,8 +4,8 @@ const dbConfig = {
     host: 'localhost',
     port: '3306',
     user: 'root',
-    password: 'MordeDB',
-    database: 'prueba 2'
+    password: 'MordoDB',
+    database: 'dbtp2'
    
 };
 
