@@ -6,6 +6,7 @@ const dbConfig = {
     user: 'root',
     password: 'MordeDB',
     database: 'prueba 2'
+   
 };
 
 const conexion = mysql.createConnection(dbConfig);
