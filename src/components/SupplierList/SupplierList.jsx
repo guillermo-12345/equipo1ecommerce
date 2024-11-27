@@ -23,11 +23,16 @@ const SupplierList = () => {
         setError('get');
       } finally {
         setLoading(false);
+<<<<<<< HEAD
       }
     };
 
     fetchSuppliers();
   }, []);
+=======
+      });
+  }, [getSuppliers]);
+>>>>>>> 22ade77a1ac68df8f2626a562697bde359cccc1f
 
   const handleAddSupplier = async (supplier) => {
     setLoading(true);
@@ -100,6 +105,7 @@ const SupplierList = () => {
   return (
     <div>
       <h1>Lista de Proveedores</h1>
+<<<<<<< HEAD
       {error && <div className="alert alert-danger">{error}</div>}
       <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Proveedor</Button>
       
@@ -134,6 +140,27 @@ const SupplierList = () => {
         handleClose={handleModalClose}
         onSave={editSupplier ? (updatedSupplier) => handleUpdateSupplier(editSupplier.id, updatedSupplier) : handleAddSupplier}
       />
+=======
+
+      {suppliers.map((supplier) => (
+        <div key={supplier.id}>
+          <p>Nombre: {supplier.name}</p>
+          <p>Teléfono: {supplier.phone}</p>
+          <p>Email: {supplier.email}</p>
+          <p>Categoría: {supplier.category}</p>
+          <Button className='mx-2' onClick={() => setEditSupplier(supplier)}>Editar</Button>
+          <Button onClick={() => handleDeleteSupplier(supplier.id)}>Eliminar</Button>
+          <hr />
+        </div>
+      ))}
+      {editSupplier && (
+        <SupplierForm
+          initialData={editSupplier}
+          onSave={(updatedSupplier) => handleUpdateSupplier(editSupplier.id, updatedSupplier)}
+        />
+      )}
+      <SupplierForm onSave={handleAddSupplier} />
+>>>>>>> 22ade77a1ac68df8f2626a562697bde359cccc1f
     </div>
   );
 };
