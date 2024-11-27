@@ -1,90 +1,89 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
+import Modal from 'react-bootstrap/Modal';
 
-const ClienteForm = ({ initialData = {}, onSave }) => {
-  const [name, setName] = useState('');
-  const [cuit, setCuit] = useState('');
-  const [email, setEmail] = useState(''); 
+const ClientesFormModal = ({ cliente, show, handleClose, onSave }) => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    cuit: '',
+    correo: ''
+  });
+
   useEffect(() => {
-    setName(initialData.name || '');
-    setCuit(initialData.cuit || '');
-    setEmail(initialData.email || '');
-  }, [initialData]);
+    if (cliente) {
+      setFormData({
+        nombre: cliente.nombre,
+        cuit: cliente.cuit,
+        correo: cliente.correo
+      });
+    }
+  }, [cliente]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ name, cuit, email }); 
-    setName('');
-    setCuit('');
-    setEmail(''); 
-  };
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleCuitChange = (e) => {
-    setCuit(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    onSave(formData); // Llama a la función para guardar los cambios
+    handleClose(); // Cierra el modal
   };
 
   return (
-    <div>
-      <h3>{initialData.id ? 'Editar Cliente' : 'Agregar Cliente'}</h3>
-      <Form className='my-3' onSubmit={handleSubmit}>
-        <Row className='justify-content-center'>
-          <Form.Group className="mb-3 col-4">
-            <Form.Label htmlFor="cliente-name">Nombre</Form.Label>
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>{cliente ? 'Editar Cliente' : 'Agregar Cliente'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formClienteName">
+            <Form.Label>Nombre</Form.Label>
             <Form.Control
-              type='text'
-              id="cliente-name"   
-              name="name"         
-              placeholder='Nombre'
-              value={name}
-              onChange={handleNameChange}
-              autoComplete='name'
+              type="text"
+              name="nombre"
+              value={formData.nombre}
+              onChange={handleChange}
+              placeholder="Ingrese el nombre del cliente"
               required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3 col-4">
-            <Form.Label htmlFor="cliente-cuit">CUIT</Form.Label>
+          <Form.Group className="mb-3" controlId="formClienteCuit">
+            <Form.Label>CUIT</Form.Label>
             <Form.Control
-              type='text'
-              id="cliente-cuit"  
-              name="cuit"         
-              placeholder='CUIT'
-              value={cuit}
-              onChange={handleCuitChange}
-              autoComplete='cuit'
+              type="text"
+              name="cuit"
+              value={formData.cuit}
+              onChange={handleChange}
+              placeholder="Ingrese el CUIT del cliente"
               required
             />
           </Form.Group>
 
-          {/* Campo para email */}
-          <Form.Group className="mb-3 col-4">
-            <Form.Label htmlFor="cliente-email">Email</Form.Label>
+          <Form.Group className="mb-3" controlId="formClienteEmail">
+            <Form.Label>Email</Form.Label>
             <Form.Control
-              type='email'
-              id="cliente-email"   
-              name="email"         
-              placeholder='Email'
-              value={email}
-              onChange={handleEmailChange}
-              autoComplete='email'
+              type="email"
+              name="correo"
+              value={formData.correo}
+              onChange={handleChange}
+              placeholder="Ingrese el correo del cliente"
               required
             />
           </Form.Group>
-        </Row>
-        <Button className='btn-success' type="submit">Guardar</Button>
-      </Form>
-    </div>
+          
+          <Button variant="primary" type="submit">
+            Guardar Cambios
+          </Button>
+        </Form>
+      </Modal.Body>
+    </Modal>
   );
 };
 
-export default ClienteForm;
+export default ClientesFormModal;

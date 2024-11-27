@@ -1,172 +1,70 @@
-/* import "../App.css";
-import { useState, useContext } from "react";
-import { CartContext } from "../context/cartContext";
-import CheckoutForm from "../components/CheckoutForm/CheckoutForm";
-import mockSalesData from "../mockSalesData";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
-const CheckOut = () => {
-  const [loading, setLoading] = useState(false);
-  const [orderId, setOrderId] = useState("");
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
+const CheckoutForm = ({ onConfirm, formData, onInputChange }) => {
+  const handleConfirm = (event) => {
+    event.preventDefault();
 
-  const { cart, total, clearCart } = useContext(CartContext);
+    const { name, phone, email } = formData;
 
-  const createOrder = ({ name, phone, email }) => {
-    setLoading(true);
+    const userData = {
+      name,
+      phone,
+      email
+    };
 
-    try {
-      const newOrderNumber = mockSalesData.length > 0 ? mockSalesData[mockSalesData.length - 1].orderNumber + 1 : 1;
-      const orderId = `${newOrderNumber}`;
-      setOrderId(orderId);
-
-      const newSalesData = cart.map(({ id, title, price, quantity, category }) => ({
-        orderNumber: newOrderNumber,
-        quantity,
-        productName: title,
-        category,
-        date: new Date().toISOString().split('T')[0],
-        customerName: name
-      }));
-
-      mockSalesData.push(...newSalesData);
-
-      clearCart();
-    } catch (error) {
-      console.error("Error al crear la orden", error);
-    } finally {
-      setLoading(false);
-    }
+    onConfirm(userData); 
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  if (loading) {
-    return <h1>Se está generando su orden...</h1>;
-  }
-
-  if (orderId) {
-    return <h1>El ID de su orden es: {orderId}</h1>;
-  }
 
   return (
-    <div>
-      <div className="">
-        <h3>Resumen de tu compra</h3>
-        {cart.map(({ id, img, title, price, quantity }) => (
-          <div key={id}>
-            <p className="text-uppercase fw-bolder" id="itemName">
-              {title}
-            </p>
-            <p>Precio Unitario: ${price}</p>
-            <p>
-              <img width={"80px"} src={img} alt="" />
-            </p>
-            <p>Cantidad: {quantity}</p>
-          </div>
-        ))}
-        <h4>Total a pagar: ${total}</h4>
-      </div>
-      <h3>Checkout</h3>
-      <CheckoutForm
-        onConfirm={createOrder}
-        formData={formData}
-        onInputChange={handleInputChange}
-      />
+    <div className='ContainerFormCheckout'>
+      <Form onSubmit={handleConfirm} className='justify-content-center'>
+        <Row className='justify-content-center'>
+          <Form.Group className="mb-3 col-4">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control
+              type='text'
+              placeholder='Guille Ibañez'
+              name='name'
+              value={formData.name}
+              onChange={onInputChange} 
+            />
+            <Form.Text className="text-muted">Nombre Completo</Form.Text>
+          </Form.Group>
+
+          <Form.Group className="mb-3 col-3">
+            <Form.Label>Teléfono</Form.Label>
+            <Form.Control
+              type='text'
+              placeholder='11 #### ####'
+              name='phone'
+              value={formData.phone}
+              onChange={onInputChange}  
+            />
+            <Form.Text className="text-muted">Celular o personal</Form.Text>
+          </Form.Group>
+        </Row>
+
+        <Row className='justify-content-center'>
+          <Form.Group className="mb-3 col-5">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              value={formData.email}
+              required
+              placeholder='xx@xxx.xx'
+              onChange={onInputChange} 
+            />
+            <Form.Text className="text-muted">Validar Email</Form.Text>
+          </Form.Group>
+        </Row>
+
+        <Button type='submit'>Crear Orden</Button>
+      </Form>
     </div>
   );
 };
 
-export default CheckOut; */
-
-import "../App.css";
-import { useState, useContext } from "react";
-import { CartContext } from "../context/cartContext";
-import CheckoutForm from "../components/CheckoutForm/CheckoutForm";
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../components/service/firebaseConfig'; 
-
-const CheckOut = () => {
-  const [loading, setLoading] = useState(false);
-  const [orderId, setOrderId] = useState("");
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
-
-  const { cart, total, clearCart } = useContext(CartContext);
-
-  const createOrder = async ({ name, phone, email }) => {
-    setLoading(true);
-
-    try {
-      const objOrder = {
-        buyer: {
-          name,
-          phone,
-          email,
-        },
-        items: cart,
-        total: total,
-        date: new Date().toISOString(),
-      };
-
-     
-      const ordersCollectionRef = collection(db, 'orders');
-
-  
-      const docRef = await addDoc(ordersCollectionRef, objOrder);
-
-  
-      setOrderId(docRef.id);
-
-      clearCart();
-    } catch (error) {
-      console.log("Error al crear la orden:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  if (loading) {
-    return <h1>Se está generando su orden...</h1>;
-  }
-
-  if (orderId) {
-    return <h1>El ID de su orden es: {orderId}</h1>;
-  }
-
-  return (
-    <div>
-      <div className="">
-        <h3>Resumen de tu compra</h3>
-        {cart.map(({ id, img, title, price, quantity }) => (
-          <div key={id}>
-            <p className="text-uppercase fw-bolder" id="itemName">
-              {title}
-            </p>
-            <p>Precio Unitario: ${price}</p>
-            <p>
-              <img width={"80px"} src={img} alt="" />
-            </p>
-            <p>Cantidad: {quantity}</p>
-          </div>
-        ))}
-        <h4>Total a pagar: ${total}</h4>
-      </div>
-      <h3>Checkout</h3>
-      <CheckoutForm
-        onConfirm={createOrder}
-        formData={formData}
-        onInputChange={handleInputChange}
-      />
-    </div>
-  );
-};
-
-export default CheckOut;
-
+export default CheckoutForm;

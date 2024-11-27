@@ -37,55 +37,63 @@ import {db} from '../service/firebaseConfig'
 
           <div className=' fw-bolder'>
             <h1 className=' rounded-5 text-uppercase bd-blue-600  '>{greeting}</h1>
-				<div className='text-dark-emphasis fw-bolder' >{loading ? (<div>...loading</div>) : (
+                <div className='text-dark-emphasis fw-bolder' >{loading ? (<div>...loading</div>) : (
                 <ItemList products={products} />
             )}</div></div>
 
       )
 }
 export default ItemListContainer;  */
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { CardFooter } from 'react-bootstrap';
-import Card from 'react-bootstrap/Card';
 
-const ItemListContainer = () => {
-    const [productos, setProductos] = useState([]);
+/*******************************************************************************/
+// import axios from 'axios';
+// import { useEffect, useState } from 'react';
+// import { CardFooter } from 'react-bootstrap';
+// import Card from 'react-bootstrap/Card';
+// import { Link } from 'react-router-dom';
+// import Button from 'react-bootstrap/Button';
 
-    useEffect(() => {
-        const fetchProductos = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/productos');
-                setProductos(response.data);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            }
-        };
+// const ItemListContainer = () => {
+//     const [productos, setProductos] = useState([]);
 
-        fetchProductos();
-    }, []);
+//     useEffect(() => {
+//         const fetchProductos = async () => {
+//             try {
+//                 const response = await axios.get('http://localhost:3000/productos');
+//                 setProductos(response.data);
+//             } catch (error) {
+//                 console.error('Error fetching products:', error);
+//             }
+//         };
 
-    return (
-        <div>
-            {productos.map((producto) => (
-              
-                <Card className=' m-5 d-flex' style={{ width: '18rem' }} key={producto.id}>
-                <Card.Img variant="top" src={producto.img} />
-                <Card.Body>
-                  <Card.Title>{producto.title}</Card.Title>
-                  <Card.Text>
-                  {producto.description}
-                  </Card.Text>
-                  <CardFooter variant="primary">{producto.price}</CardFooter>
-                </Card.Body>
-              </Card>
-            ))}
-        </div>
-    );
-};
+//         fetchProductos();
+//     }, []);
 
-export default ItemListContainer;
+//     return (
+//         <div className='d-flex flex-wrap justify-content-center'>
+//             <h2>pito</h2>
+//             {productos.map((producto) => (
+//                 <Card className=' m-5 d-flex ' style={{ width: '18rem' }} key={producto.id}>
+//                     <Card.Img variant="top" src={producto.imagen} />
+//                     <Card.Body>
+//                         <Card.Title>{producto.nombre}</Card.Title>
+//                         <Card.Text> {producto.descripcion} </Card.Text>
+//                         <Card.Text> categoria: {producto.categoria} </Card.Text>
+//                         <Link to={`/item/${producto.id}`}>
+//                             <Button variant="primary" >
+//                                 Ver Producto
+//                             </Button>
+//                         </Link>
+//                         <CardFooter variant="primary">{producto.precio_venta}</CardFooter>
+//                     </Card.Body>
+//                 </Card>
+//             ))}
+//         </div>
+//     );
+// };
 
+// export default ItemListContainer;
+/***************************************************************************************************************/
 
 
 
@@ -132,3 +140,102 @@ const ItemListContainer = ({ greeting }) => {
 
 export default ItemListContainer;*/
 
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { CardFooter } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import { Link, useParams } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import Accordion from 'react-bootstrap/Accordion';
+
+
+const ItemListContainer = () => {
+    const [productos, setProductos] = useState([]);
+    const { categoryId } = useParams(); // Obtén la categoría desde la URL
+
+    useEffect(() => {
+        const fetchProductos = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/productos');
+                const allProducts = response.data;
+
+                // Filtra los productos si se proporciona una categoría en la URL
+                const filteredProducts = categoryId
+                    ? allProducts.filter((producto) => producto.categoria === categoryId)
+                    : allProducts;
+
+                setProductos(filteredProducts);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        fetchProductos();
+    }, [categoryId]); // Actualiza los productos al cambiar la categoría
+
+    return (
+        <div className='d-flex flex-wrap justify-content-center'>
+
+            {productos.length > 0 ? (
+                productos.map((producto) => (
+                    <Card className='m-5 d-flex' style={{ width: '18rem' }} key={producto.id}>
+<Card.Img variant="top" src={producto.imagen} />
+<Card.Body>
+    <Card.Title>{producto.nombre}</Card.Title>
+    <Card.Text className='text-truncate'>{producto.descripcion}</Card.Text>
+    <Card.Text>Categoria: {producto.categoria}</Card.Text>
+    <Link to={`/item/${producto.id}`}>
+        <Button variant="primary">
+            Ver Producto
+        </Button>
+    </Link>
+    <CardFooter className='text-success' variant="primary">Precio: ${producto.precio_venta}</CardFooter>
+</Card.Body>
+</Card>
+                ))
+            ) : (
+                <p>No hay productos disponibles en esta categoría.</p>
+            )}
+        </div>
+    );
+};
+
+export default ItemListContainer;
+
+
+{/* <Link to={`/item/${producto.id}`}>
+<Button variant="primary">
+    Ver Producto
+</Button>
+</Link> */}
+
+
+
+
+
+// <div className="card shadow" style={{ width: '20rem', margin: '.5rem' }}>
+//                         <img src={producto.imagen} className="card-img-top shadow rounded-2 object-fit-fill p-3" />
+//                         <div className="card-body">
+//                             <p className=" text-uppercase card-title">{producto.nombre}</p>
+//                             <Accordion defaultActiveKey="0">
+//                                 <Accordion.Item eventKey="1">
+//                                     <Accordion.Header>
+//                                         Mostrar Descripcion
+//                                     </Accordion.Header>
+//                                     <Accordion.Body>
+//                                         {producto.descripcion}
+//                                     </Accordion.Body>
+//                                 </Accordion.Item>
+//                             </Accordion>
+//                             <div className="collapse" id="collapseExample">
+//                                 <div className="card card-body">
+//                                     <p className=" text-body-secondary">
+//                                         {producto.descripcion}
+//                                     </p>
+//                                 </div>
+                                
+//                             </div>
+
+//                         </div>
+                       
+//                     </div>

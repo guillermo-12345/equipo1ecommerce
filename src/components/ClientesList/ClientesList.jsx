@@ -1,142 +1,54 @@
-/* import React, { useEffect, useState } from 'react';
-import { getClientes, addClientes, updateClientes, deleteClientes } from '../../asyncMock';
-import ClientesForm from '../ClientesForm/ClientesForm';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'; 
+import ClientesFormModal from '../ClientesForm/ClientesForm';
 import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table'; // Importa Table
 
 const ClienteList = () => {
-  const [clientes, setClientes] = useState([]);
+  const [clientes, setClientes] = useState([]);  
   const [loading, setLoading] = useState(true);
   const [editCliente, setEditCliente] = useState(null);
-
-  useEffect(() => {
-    setLoading(true);
-    getClientes()
-      .then((data) => {
-        setClientes(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching clients:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  const handleAddCliente = (cliente) => {
-    setLoading(true);
-    addClientes(cliente)
-      .then((newCliente) => {
-        setClientes((prevClientes) => [...prevClientes, newCliente]);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const handleUpdateCliente = (id, updatedCliente) => {
-    setLoading(true);
-    updateClientes(id, updatedCliente)
-      .then(() => {
-        setClientes((prevClientes) =>
-          prevClientes.map((cliente) =>
-            cliente.id === id ? { ...cliente, ...updatedCliente } : cliente
-          )
-        );
-      })
-      .finally(() => {
-        setLoading(false);
-        setEditCliente(null);
-      });
-  };
-
-  const handleDeleteCliente = (id) => {
-    setLoading(true);
-    deleteClientes(id)
-      .then(() => {
-        setClientes((prevClientes) =>
-          prevClientes.filter((cliente) => cliente.id !== id)
-        );
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div>
-      <h1>Lista de Clientes</h1>
-      
-      {clientes.map((cliente) => (
-        <div key={cliente.id}>
-          <p>Nombre: {cliente.name}</p>
-          <p>CUIT: {cliente.cuit}</p>
-          <Button className='mx-2' onClick={() => setEditCliente(cliente)}>Editar</Button>
-          <Button onClick={() => handleDeleteCliente(cliente.id)}>Eliminar</Button>
-          <hr />
-        </div>
-      ))}
-      {editCliente && (
-        <ClientesForm
-          initialData={editCliente}
-          onSave={(updatedCliente) => handleUpdateCliente(editCliente.id, updatedCliente)}
-        />
-      )}
-      <ClientesForm onSave={handleAddCliente} />
-    </div>
-  );
-};
-
-export default ClienteList; 
-import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import ClientesForm from '../ClientesForm/ClientesForm';
-import Button from 'react-bootstrap/Button';
-
-const ClienteList = () => {
-  const [clientes, setClientes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editCliente, setEditCliente] = useState(null);
-  
-  const db = getFirestore();
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchClientes = async () => {
       setLoading(true);
+      setError(null); 
       try {
-        const querySnapshot = await getDocs(collection(db, "clientes"));
-        const clientList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setClientes(clientList);
+        const response = await axios.get('http://localhost:3000/clientes');
+        setClientes(response.data);
       } catch (error) {
         console.error('Error fetching clients:', error);
+        setError('get');
       } finally {
         setLoading(false);
       }
     };
 
     fetchClientes();
-  }, [db]);
+  }, []);
 
   const handleAddCliente = async (cliente) => {
     setLoading(true);
+    setError(null);
     try {
-      const docRef = await addDoc(collection(db, "clientes"), cliente);
-      setClientes((prevClientes) => [...prevClientes, { id: docRef.id, ...cliente }]);
+        const response = await axios.post('http://localhost:3000/cliente', cliente);
+        setClientes((prevClientes) => [...prevClientes, response.data]);
     } catch (error) {
-      console.error('Error adding client:', error);
+        console.error('Error adding client:', error);
+        setError('post');
     } finally {
-      setLoading(false);
+        setLoading(false);
+        setShowModal(false); // Cierra el modal después de agregar el cliente
     }
   };
 
   const handleUpdateCliente = async (id, updatedCliente) => {
     setLoading(true);
+    setError(null);
     try {
-      const clientDoc = doc(db, "clientes", id);
-      await updateDoc(clientDoc, updatedCliente);
+      await axios.put(`http://localhost:3000/clientes/${id}`, updatedCliente);
       setClientes((prevClientes) =>
         prevClientes.map((cliente) =>
           cliente.id === id ? { ...cliente, ...updatedCliente } : cliente
@@ -144,129 +56,38 @@ const ClienteList = () => {
       );
     } catch (error) {
       console.error('Error updating client:', error);
+      setError('put');
     } finally {
       setLoading(false);
       setEditCliente(null);
+      setShowModal(false);
     }
   };
 
   const handleDeleteCliente = async (id) => {
     setLoading(true);
+    setError(null);
     try {
-      const clientDoc = doc(db, "clientes", id);
-      await deleteDoc(clientDoc);
+      await axios.delete(`http://localhost:3000/clientes/${id}`);
       setClientes((prevClientes) =>
         prevClientes.filter((cliente) => cliente.id !== id)
       );
     } catch (error) {
       console.error('Error deleting client:', error);
+      setError('delete');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div>
-      <h1>Lista de Clientes</h1>
-      
-      {clientes.map((cliente) => (
-        <div key={cliente.id}>
-          <p>Nombre: {cliente.name}</p>
-          <p>CUIT: {cliente.cuit}</p>
-          <Button className='mx-2' onClick={() => setEditCliente(cliente)}>Editar</Button>
-          <Button onClick={() => handleDeleteCliente(cliente.id)}>Eliminar</Button>
-          <hr />
-        </div>
-      ))}
-      {editCliente && (
-        <ClientesForm
-          initialData={editCliente}
-          onSave={(updatedCliente) => handleUpdateCliente(editCliente.id, updatedCliente)}
-        />
-      )}
-      <ClientesForm onSave={handleAddCliente} />
-    </div>
-  );
-};
-
-export default ClienteList;*/
-
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; 
-import ClientesForm from '../ClientesForm/ClientesForm';
-import Button from 'react-bootstrap/Button';
-
-const ClienteList = () => {
-  const [clientes, setClientes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editCliente, setEditCliente] = useState(null);
-
- 
-  useEffect(() => {
-    setLoading(true);
-    axios.get('/api/clientes')  
-      .then((response) => {
-        setClientes(response.data); 
-      })
-      .catch((error) => {
-        console.error('Error fetching clients:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  const handleAddCliente = (cliente) => {
-    setLoading(true);
-    axios.post('/api/clientes', cliente) 
-      .then((response) => {
-        setClientes((prevClientes) => [...prevClientes, response.data]); 
-      })
-      .catch((error) => {
-        console.error('Error adding client:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  const handleEditClick = (cliente) => {
+    setEditCliente(cliente);
+    setShowModal(true);
   };
 
-  const handleUpdateCliente = (id, updatedCliente) => {
-    setLoading(true);
-    axios.put(`/api/clientes/${id}`, updatedCliente) 
-      .then(() => {
-        setClientes((prevClientes) =>
-          prevClientes.map((cliente) =>
-            cliente.id === id ? { ...cliente, ...updatedCliente } : cliente
-          )
-        );
-      })
-      .catch((error) => {
-        console.error('Error updating client:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-        setEditCliente(null);
-      });
-  };
-
-  const handleDeleteCliente = (id) => {
-    setLoading(true);
-    axios.delete(`/api/clientes/${id}`) 
-      .then(() => {
-        setClientes((prevClientes) =>
-          prevClientes.filter((cliente) => cliente.id !== id)
-        );
-      })
-      .catch((error) => {
-        console.error('Error deleting client:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  const handleModalClose = () => {
+    setShowModal(false);
+    setEditCliente(null);
   };
 
   if (loading) {
@@ -276,24 +97,39 @@ const ClienteList = () => {
   return (
     <div>
       <h1>Lista de Clientes</h1>
+      {error && <div className="alert alert-danger">{error}</div>}
+      <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Cliente</Button>
       
-      {clientes.map((cliente) => (
-        <div key={cliente.id}>
-          <p>Nombre: {cliente.name}</p>
-          <p>CUIT: {cliente.cuit}</p>
-          <p>Email: {cliente.email}</p>
-          <Button className='mx-2' onClick={() => setEditCliente(cliente)}>Editar</Button>
-          <Button onClick={() => handleDeleteCliente(cliente.id)}>Eliminar</Button>
-          <hr />
-        </div>
-      ))}
-      {editCliente && (
-        <ClientesForm
-          initialData={editCliente}
-          onSave={(updatedCliente) => handleUpdateCliente(editCliente.id, updatedCliente)}
-        />
-      )}
-      <ClientesForm onSave={handleAddCliente} />
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>CUIT</th>
+            <th>Email</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clientes.map((cliente) => (
+            <tr key={cliente.id}>
+              <td>{cliente.nombre}</td>
+              <td>{cliente.cuit}</td>
+              <td>{cliente.correo}</td>
+              <td>
+                <Button className='mx-2' onClick={() => handleEditClick(cliente)}>Editar</Button>
+                <Button onClick={() => handleDeleteCliente(cliente.id)}>Eliminar</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+
+      <ClientesFormModal
+        cliente={editCliente}
+        show={showModal}
+        handleClose={handleModalClose}
+        onSave={editCliente ? (updatedCliente) => handleUpdateCliente(editCliente.id, updatedCliente) : handleAddCliente}
+      />
     </div>
   );
 };
