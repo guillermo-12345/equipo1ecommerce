@@ -5,7 +5,7 @@ const dbConfig = {
     port: '3306',
     user: 'root',
     password: 'MordeDB',
-    database: 'mordekaiser'
+    database: 'prueba 2'
 };
 
 const conexion = mysql.createConnection(dbConfig);
