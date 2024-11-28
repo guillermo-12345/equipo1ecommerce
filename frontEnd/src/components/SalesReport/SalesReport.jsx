@@ -1,24 +1,36 @@
-// src/components/SalesReport/SalesReport.jsx
 import React, { useState, useEffect } from "react";
 import ApexCharts from "apexcharts";
-import { Table, Form, Button, Row, FormSelect } from "react-bootstrap";
-import mockSalesData from "../../mockSalesData";
+import { Table, Form, Button, Row } from "react-bootstrap";
 
 const SalesReport = () => {
-  const [filteredData, setFilteredData] = useState(mockSalesData);
+  const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({
     orderNumber: "",
-    productName: "",
-    category: "",
     startDate: "",
     endDate: "",
-    customerName: ""
+    clientName: ""
   });
 
   useEffect(() => {
+    // Obtener datos de la API
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/ventas");
+        const data = await response.json();
+        setFilteredData(data);
+      } catch (error) {
+        console.error("Error al obtener los datos de la API:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    // Crear datos para el gráfico usando el nombre del producto
     const chartData = filteredData.map((item) => ({
-      x: item.productName,
-      y: item.quantity
+      x: item.nombre_producto, // Usar el nombre del producto
+      y: parseFloat(item.total) // Total de la venta
     }));
 
     const options = {
@@ -33,10 +45,11 @@ const SalesReport = () => {
       }
     };
 
+    // Crear e inicializar el gráfico
     const chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
 
-    return () => chart.destroy();
+    return () => chart.destroy(); // Limpiar cuando el componente se desmonte
   }, [filteredData]);
 
   const handleFilterChange = (e) => {
@@ -48,117 +61,107 @@ const SalesReport = () => {
   };
 
   const handleClearFilters = () => {
-    setFilters({ orderNumber: "", productName: "", category: "", startDate: "", endDate: "", customerName: "" });
-    setFilteredData(mockSalesData);
-
+    setFilters({ orderNumber: "", startDate: "", endDate: "", clientName: "" });
   };
 
-  const applyFilters = () => {
-    const filtered = mockSalesData.filter(item => {
-      const itemDate = new Date(item.date);
-      const startDate = filters.startDate ? new Date(filters.startDate) : null;
-      const endDate = filters.endDate ? new Date(filters.endDate) : null;
+  // Filtrar los datos según los filtros
+  const filteredSales = filteredData.filter((item) => {
+    const matchesOrderNumber = filters.orderNumber
+      ? item.id.toString().includes(filters.orderNumber)
+      : true;
+    const matchesStartDate = filters.startDate
+      ? new Date(item.fecha_venta) >= new Date(filters.startDate)
+      : true;
+    const matchesEndDate = filters.endDate
+      ? new Date(item.fecha_venta) <= new Date(filters.endDate)
+      : true;
+    const matchesClientName = filters.clientName
+      ? item.cliente_id.toString().includes(filters.clientName)
+      : true;
 
-      return (
-        (!filters.orderNumber || item.orderNumber.toString().includes(filters.orderNumber)) &&
-        (!filters.productName || item.productName.toLowerCase().includes(filters.productName.toLowerCase())) &&
-        (!filters.category || item.category.toLowerCase().includes(filters.category.toLowerCase())) &&
-        (!filters.customerName || item.customerName.toLowerCase().includes(filters.customerName.toLowerCase())) &&
-        (!startDate || itemDate >= startDate) &&
-        (!endDate || itemDate <= endDate)
-      );
-    });
-    setFilteredData(filtered);
-  };
+    return matchesOrderNumber && matchesStartDate && matchesEndDate && matchesClientName;
+  });
 
   return (
-    <div className="justify-content-center container-fluid">
+    <div className="container-fluid">
       <h1>Reporte de Ventas</h1>
-      <Form className="container-fluid justify-content-center my-4">
-        <Row className="justify-content-center">
-          <Form.Group className="col-1" controlId="orderNumber">
-            <Form.Label>Orden</Form.Label>
-            <Form.Control
-              type="text"
-              name="orderNumber"
-              value={filters.orderNumber}
-              onChange={handleFilterChange}
-            />
-          </Form.Group>
-          <Form.Group className="col-2" controlId="productName">
-            <Form.Label>Nombre del producto</Form.Label>
-            <Form.Control
-              type="text"
-              name="productName"
-              value={filters.productName}
-              onChange={handleFilterChange}
-            />
-          </Form.Group>
-          <Form.Group className="col-3" controlId="category">
-            <Form.Label>Categoría</Form.Label>
-            <FormSelect name="category" value={filters.category} onChange={handleFilterChange}>
-              <option value="">Seleccionar categoría</option>
-              <option value="notebook">Notebook</option>
-              <option value="celular">Celular</option>
-              <option value="tablet">Tablet</option>
-            </FormSelect>
-          </Form.Group>
-          <Form.Group className="col-2" controlId="startDate">
-            <Form.Label>Fecha Inicio</Form.Label>
-            <Form.Control
-              type="date"
-              name="startDate"
-              value={filters.startDate}
-              onChange={handleFilterChange}
-            />
-          </Form.Group>
-          <Form.Group className="col-2" controlId="endDate">
-            <Form.Label>Fecha Fin</Form.Label>
-            <Form.Control
-              type="date"
-              name="endDate"
-              value={filters.endDate}
-              onChange={handleFilterChange}
-            />
-          </Form.Group>
-          <Form.Group className="col-2" controlId="customerName">
-            <Form.Label>Nombre del Cliente</Form.Label>
-            <Form.Control
-              type="text"
-              name="customerName"
-              value={filters.customerName}
-              onChange={handleFilterChange}
-            />
-          </Form.Group>
-        </Row>
-        <Button className="mt-4" onClick={applyFilters}>Filtrar</Button>
-        <Button className="mt-4 mx-3 btn btn-secondary" onClick={handleClearFilters}>Borrar Filtros</Button>
-      </Form>
-      <Table className="table-responsive table w-75 p-5 m-5" striped bordered hover>
+      
+      <Row className="justify-content-center">
+        <Form className="col-12 col-md-10">
+          <Row className="mb-3">
+            <Form.Group className="col-md-3" controlId="orderNumber">
+              <Form.Label>Orden de Venta</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Buscar por número de orden"
+                name="orderNumber"
+                value={filters.orderNumber}
+                onChange={handleFilterChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="col-md-3" controlId="startDate">
+              <Form.Label>Fecha de Inicio</Form.Label>
+              <Form.Control
+                type="date"
+                name="startDate"
+                value={filters.startDate}
+                onChange={handleFilterChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="col-md-3" controlId="endDate">
+              <Form.Label>Fecha de Fin</Form.Label>
+              <Form.Control
+                type="date"
+                name="endDate"
+                value={filters.endDate}
+                onChange={handleFilterChange}
+              />
+            </Form.Group>
+
+            <Form.Group className="col-md-3" controlId="clientName">
+              <Form.Label>ID Cliente</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Buscar por ID de cliente"
+                name="clientName"
+                value={filters.clientName}
+                onChange={handleFilterChange}
+              />
+            </Form.Group>
+          </Row>
+
+          <Button className="mt-2" variant="primary" onClick={handleClearFilters}>
+            Limpiar Filtros
+          </Button>
+        </Form>
+      </Row>
+
+      <div id="chart" style={{ marginTop: "30px" }}></div>
+
+      <Table className="table table-bordered table-striped table-hover mt-4">
         <thead>
           <tr>
-            <th>Orden</th>
-            <th>Cantidad</th>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Fecha</th>
-            <th>Cliente</th>
+            <th>#</th>
+            <th>Fecha de Venta</th>
+            <th>Total</th>
+            <th>ID Cliente</th>
+            <th>Nombre Producto</th>
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item) => (
-            <tr key={item.orderNumber}>
-              <td>{item.orderNumber}</td>
-              <td>{item.quantity}</td>
-              <td>{item.productName}</td>
-              <td>{item.category}</td>
-              <td>{item.date}</td>
-              <td>{item.customerName}</td>
+          {filteredSales.map((sale) => (
+            <tr key={sale.id}>
+              <td>{sale.id_venta}</td>
+              <td>{new Date(sale.fecha_venta).toLocaleString()}</td>
+              <td>{sale.total}</td>
+              <td>{sale.cliente_id}</td>
+              <td>{sale.nombre_producto}</td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <div id="chart"></div>
     </div>
   );
 };

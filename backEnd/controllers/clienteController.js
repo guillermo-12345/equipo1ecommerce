@@ -15,7 +15,7 @@ const conexion = require("../db/conection");
 // }
 function createCliente(req, res) {
     const { nombre, cuit, correo } = req.body; 
-    const query = 'INSERT INTO clientes (nombre, cuit, correo) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO cliente (nombre, cuit, correo) VALUES (?, ?, ?)';
 
     conexion.query(query, [nombre, cuit, correo], (err, result) => {
         if (err) {
@@ -30,7 +30,7 @@ function createCliente(req, res) {
 }
 
 function getClientes(req, res) { 
-    const query = 'SELECT * FROM clientes'; 
+    const query = 'SELECT * FROM cliente'; 
 
     conexion.query(query, (err, results) => {
         if (err) {
@@ -44,7 +44,7 @@ function getClientes(req, res) {
 
 function deleteCliente(req, res) {
     const { id } = req.params; 
-    const query = 'DELETE FROM clientes WHERE id = ?';
+    const query = 'DELETE FROM cliente WHERE id = ?';
 
 
     conexion.query(query, [id], (err, result) => {
@@ -64,7 +64,7 @@ function deleteCliente(req, res) {
 function updateCliente(req, res) {
     const { id } = req.params; 
     const { nombre, cuit, correo } = req.body; 
-    const query = 'UPDATE clientes SET nombre = ?, cuit = ?, correo = ? WHERE id = ?';
+    const query = 'UPDATE cliente SET nombre = ?, cuit = ?, correo = ? WHERE id = ?';
 
     // Ejecutamos la consulta
     conexion.query(query, [nombre, cuit, correo, id], (err, result) => {

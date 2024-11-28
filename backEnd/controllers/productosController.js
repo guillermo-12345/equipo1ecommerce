@@ -148,7 +148,7 @@ function createProducto(req, res) {
     console.log(req.body); 
     const { nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock } = req.body; // Añadido el campo de stock
 
-    const query = 'INSERT INTO productos (nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO producto (nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
     conexion.query(query, [nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock], (err, result) => {
         if (err) {
@@ -161,7 +161,7 @@ function createProducto(req, res) {
 }
 
 function getProducto(req, res) { 
-    const query = 'SELECT * FROM productos'; 
+    const query = 'SELECT * FROM producto'; 
 
     conexion.query(query, (err, results) => {
         if (err) {
@@ -175,7 +175,7 @@ function getProducto(req, res) {
 
 function getProductoId(req, res) {
     const { id } = req.params; 
-    const query = 'SELECT * FROM productos WHERE id = ?';
+    const query = 'SELECT * FROM producto WHERE id = ?';
 
     conexion.query(query, [id], (err, results) => {
         if (err) {
@@ -193,7 +193,7 @@ function getProductoId(req, res) {
 
 function deleteProducto(req, res) {
     const { id } = req.params; 
-    const query = 'DELETE FROM productos WHERE id = ?';
+    const query = 'DELETE FROM producto WHERE id = ?';
 
     conexion.query(query, [id], (err, result) => {
         if (err) {
@@ -211,7 +211,7 @@ function deleteProducto(req, res) {
     const { id } = req.params; 
     const { nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock } = req.body; 
 
-    const query = 'UPDATE productos SET nombre = ?, precio_venta = ?, precio_compra = ?, descripcion = ?, imagen = ?, categoria = ?, stock = ? WHERE id = ?';
+    const query = 'UPDATE producto SET nombre = ?, precio_venta = ?, precio_compra = ?, descripcion = ?, imagen = ?, categoria = ?, stock = ? WHERE id = ?';
 
     conexion.query(query, [nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock, id], (err, result) => {
         if (err) {

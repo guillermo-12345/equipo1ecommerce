@@ -1,7 +1,7 @@
 const conexion = require("../db/conection");
 
 function getProveedor(req, res) {
-    const query = "SELECT * FROM proveedores";
+    const query = "SELECT * FROM proveedor";
 
     conexion.query(query, (err, result) => {
         if (err) {
@@ -14,7 +14,7 @@ function getProveedor(req, res) {
 
 function createProveedor(req, res) {
     const { nombre, telefono, correo, categoria } = req.body;
-    const query = 'INSERT INTO proveedores (nombre, telefono, correo, categoria) VALUES (?, ?, ?, ?)';
+    const query = 'INSERT INTO proveedor (nombre, telefono, correo, categoria) VALUES (?, ?, ?, ?)';
 
     conexion.query(query, [nombre, telefono, correo, categoria], (err, result) => {
         if (err) {
@@ -32,7 +32,7 @@ function createProveedor(req, res) {
 function updateProveedor(req, res) {
     const proveedoresId = req.params.id;
     const { nombre, telefono, correo, categoria } = req.body;
-    const query = "UPDATE proveedores SET nombre = ?, telefono = ?, correo = ?, categoria = ? WHERE id = ?";
+    const query = "UPDATE proveedor SET nombre = ?, telefono = ?, correo = ?, categoria = ? WHERE id = ?";
     
 
     conexion.query(query, [nombre, telefono, correo, categoria, proveedoresId], (err, result) => {
@@ -49,7 +49,7 @@ function updateProveedor(req, res) {
 
 function getProveedorId(req, res) {
     const proveedoresId = req.params.id;
-    const query = "SELECT * FROM proveedores WHERE id = ?";
+    const query = "SELECT * FROM proveedor WHERE id = ?";
 
     conexion.query(query, [proveedoresId], (err, result) => {
         if (err) {
@@ -65,7 +65,7 @@ function getProveedorId(req, res) {
 
 function deleteProveedor(req, res) {
     const proveedoresId = req.params.id;
-    const query = "DELETE FROM proveedores WHERE id = ?";
+    const query = "DELETE FROM proveedor WHERE id = ?";
 
     conexion.query(query, [proveedoresId], (err, result) => {
         if (err) {
