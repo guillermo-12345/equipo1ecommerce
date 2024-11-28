@@ -144,21 +144,23 @@ const conexion = require("../db/conection");
 //     });
 // }
 
-function createProducto(req, res) { 
-    console.log(req.body); 
-    const { nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock } = req.body; // Añadido el campo de stock
+function createProducto(req, res) {
+    console.log(req.body);
+    const { nombre, precio_venta, precio_compra, descripcion, imagen, category, stock } = req.body; 
+   
+    const query = 'INSERT INTO producto (nombre, precio_venta, precio_compra, descripcion, imagen, categoria_id, stock) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-    const query = 'INSERT INTO producto (nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-    conexion.query(query, [nombre, precio_venta, precio_compra, descripcion, imagen, categoria, stock], (err, result) => {
+    conexion.query(query, [nombre, precio_venta, precio_compra, descripcion, imagen, category, stock], (err, result) => {
         if (err) {
             console.error(err);
-            return res.status(500).send("Error al crear el producto"); 
+            return res.status(500).send("Error al crear el producto");
         } else {
-            return res.status(201).json(result); // 201 indica que se ha creado un nuevo recurso
+            return res.status(201).json(result); 
         }
     });
 }
+
 
 function getProducto(req, res) { 
     const query = 'SELECT * FROM producto'; 
@@ -193,7 +195,7 @@ function getProductoId(req, res) {
 
 function deleteProducto(req, res) {
     const { id } = req.params; 
-    const query = 'DELETE FROM producto WHERE id = ?';
+    const query = 'DELETE FROM producto WHERE producto_id = ?';
 
     conexion.query(query, [id], (err, result) => {
         if (err) {

@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AddProductForm = () => {
   const [formData, setFormData] = useState({
-    category: '',
+    category: '',  // Almacena el categoria_id
     title: '',
     description: '',
     price: '',
     img: '',
     stock: ''
   });
+
+  const [categories, setCategories] = useState([]); // Almacenar categorías
+
+  // Cargar categorías desde la API
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/categorias'); // Suponiendo que tienes un endpoint para obtener las categorías
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error al cargar las categorías:', error);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +57,14 @@ const AddProductForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <label>Categoría:</label>
-      <input type="text" name="category" value={formData.category} onChange={handleChange} required />
+      <select name="category" value={formData.category} onChange={handleChange} required>
+        <option value="">Seleccionar categoría</option>
+        {categories.map((category) => (
+          <option key={category.categoria_id} value={category.categoria_id}>
+            {category.nombre_categoria}
+          </option>
+        ))}
+      </select>
 
       <label>Título:</label>
       <input type="text" name="title" value={formData.title} onChange={handleChange} required />
