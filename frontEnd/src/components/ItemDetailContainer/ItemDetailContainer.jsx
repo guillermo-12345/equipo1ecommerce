@@ -6,6 +6,7 @@ function ItemDetailContainer(){
     const [productDetail, setProductDetail] = useState(null)
     const [loading, setLoading] = useState(true)
     const {itemId} = useParams()
+    console.log(itemId)
 
     useEffect(()=>{
         axios.get(`http://localhost:3000/productos/${itemId}`)

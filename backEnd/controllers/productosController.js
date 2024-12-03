@@ -143,6 +143,26 @@
 //         }
 //     });
 // }
+
+// function deleteProducto(req, res) {
+//     const { id } = req.params; 
+//     const query = 'DELETE FROM producto WHERE producto_id = ?';
+
+//     conexion.query(query, [id], (err, result) => {
+//         if (err) {
+//             console.error(err); 
+//             return res.status(500).json({ error: 'Error al eliminar el producto' }); 
+//         }
+
+//         if (result.affectedRows === 0) {
+//             return res.status(404).json({ error: 'Producto no encontrado' }); 
+//         }
+
+//         return res.status(200).json({ message: 'Producto eliminado con éxito' }); 
+//     });
+// }
+// Eliminar un producto, estableciendo a NULL las referencias en la tabla 'compras'
+
 const conexion = require("../db/conection");
 function createProducto(req, res) {
     console.log(req.body);
@@ -198,28 +218,10 @@ function getProductoId(req, res) {
     });
 }
 
-// function deleteProducto(req, res) {
-//     const { id } = req.params; 
-//     const query = 'DELETE FROM producto WHERE producto_id = ?';
-
-//     conexion.query(query, [id], (err, result) => {
-//         if (err) {
-//             console.error(err); 
-//             return res.status(500).json({ error: 'Error al eliminar el producto' }); 
-//         }
-
-//         if (result.affectedRows === 0) {
-//             return res.status(404).json({ error: 'Producto no encontrado' }); 
-//         }
-
-//         return res.status(200).json({ message: 'Producto eliminado con éxito' }); 
-//     });
-// }
-// Eliminar un producto, estableciendo a NULL las referencias en la tabla 'compras'
 function deleteProducto(req, res) {
     const { id } = req.params;
 
-    // Primero, actualizar las filas relacionadas en la tabla 'compras' para poner el producto_id como NULL
+   
     const updateQuery = 'UPDATE compras SET producto_id = NULL WHERE producto_id = ?';
 
     conexion.query(updateQuery, [id], (err, result) => {
@@ -228,7 +230,7 @@ function deleteProducto(req, res) {
             return res.status(500).json({ error: 'Error al actualizar las compras relacionadas' });
         }
 
-        // Ahora proceder con la eliminación del producto
+        
         const deleteQuery = 'DELETE FROM producto WHERE producto_id = ?';
 
         conexion.query(deleteQuery, [id], (err, result) => {

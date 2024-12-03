@@ -190,7 +190,7 @@ const ItemListContainer = () => {
                             <Card.Title>{producto.nombre}</Card.Title>
                             <Card.Text className='text-truncate'>{producto.descripcion}</Card.Text>
                             <Card.Text>Categoria: {producto.categoria}</Card.Text>
-                            <Link to={`/item/${producto.id}`}>
+                            <Link to={`/item/${producto.producto_id}`}>
                                 <Button variant="primary">
                                     Ver Producto
                                 </Button>
