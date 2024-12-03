@@ -12,7 +12,7 @@ const SalesReport = () => {
   });
 
   useEffect(() => {
-    // Obtener datos de la API
+    
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:3000/ventas");
@@ -27,10 +27,10 @@ const SalesReport = () => {
   }, []);
 
   useEffect(() => {
-    // Crear datos para el gráfico usando el nombre del producto
+    
     const chartData = filteredData.map((item) => ({
-      x: item.nombre_producto, // Usar el nombre del producto
-      y: parseFloat(item.total) // Total de la venta
+      x: item.nombre_producto,
+      y: parseFloat(item.total) 
     }));
 
     const options = {
@@ -45,11 +45,11 @@ const SalesReport = () => {
       }
     };
 
-    // Crear e inicializar el gráfico
+   
     const chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
 
-    return () => chart.destroy(); // Limpiar cuando el componente se desmonte
+    return () => chart.destroy();
   }, [filteredData]);
 
   const handleFilterChange = (e) => {
@@ -64,7 +64,7 @@ const SalesReport = () => {
     setFilters({ orderNumber: "", startDate: "", endDate: "", clientName: "" });
   };
 
-  // Filtrar los datos según los filtros
+
   const filteredSales = filteredData.filter((item) => {
     const matchesOrderNumber = filters.orderNumber
       ? item.id.toString().includes(filters.orderNumber)

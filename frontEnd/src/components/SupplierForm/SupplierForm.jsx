@@ -8,7 +8,7 @@ const SupplierFormModal = ({ supplier, show, handleClose, onSave }) => {
     nombre: '',
     telefono: '',
     correo: '',
-    categoria: 'notebook' // Valor por defecto para la categoría
+    categoria: '' 
   });
 
   useEffect(() => {
@@ -17,14 +17,14 @@ const SupplierFormModal = ({ supplier, show, handleClose, onSave }) => {
         nombre: supplier.nombre,
         telefono: supplier.telefono,
         correo: supplier.correo,
-        categoria: supplier.categoria || 'notebook' // Si no hay categoría, establece el valor por defecto
+        categoria: supplier.categoria 
       });
     } else {
       setFormData({
         nombre: '',
         telefono: '',
         correo: '',
-        categoria: 'notebook' // Reinicia a 'notebook' por defecto
+        categoria: '' 
       });
     }
   }, [supplier]);
@@ -39,8 +39,9 @@ const SupplierFormModal = ({ supplier, show, handleClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData); // Llama a la función para guardar los cambios
-    handleClose(); // Cierra el modal
+    onSave(formData); 
+    console.log(typeof formData)
+    handleClose(); 
   };
 
   return (
@@ -66,7 +67,7 @@ const SupplierFormModal = ({ supplier, show, handleClose, onSave }) => {
             <Form.Label>Teléfono</Form.Label>
             <Form.Control
               type="text"
-              name="telefono" // Corregido el nombre del campo
+              name="telefono" 
               value={formData.telefono}
               onChange={handleChange}
               placeholder="Ingrese el teléfono del proveedor"
@@ -95,9 +96,10 @@ const SupplierFormModal = ({ supplier, show, handleClose, onSave }) => {
               onChange={handleChange}
               required
             >
-              <option value="notebook">Notebook</option>
-              <option value="celular">Celular</option>
-              <option value="tablet">Tablet</option>
+              <option value="">Seleccione una categoria</option>
+              <option value="3">Notebook</option>
+              <option value="1">Celular</option>
+              <option value="2">Tablet</option>
             </Form.Control>
           </Form.Group>
 

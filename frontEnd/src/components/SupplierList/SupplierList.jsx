@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import SupplierFormModal from '../SupplierForm/SupplierForm'; // Asegúrate de que la ruta sea correcta
+import SupplierFormModal from '../SupplierForm/SupplierForm'; 
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 
@@ -12,80 +12,61 @@ const SupplierList = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const fetchSuppliers = async () => {
-      setLoading(true);
-      setError(null); 
-      try {
-        const response = await axios.get('http://localhost:3000/proveedores'); // Cambia la URL según tu API
-        setSuppliers(response.data);
-      } catch (error) {
-        console.error('Error fetching suppliers:', error);
-        setError('get');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchSuppliers();
   }, []);
 
-  const handleAddSupplier = async (supplier) => {
+  const fetchSuppliers = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post('http://localhost:3000/proveedor', supplier); // Cambia la URL según tu API
-      setSuppliers((prevSuppliers) => [...prevSuppliers, response.data]);
+      const response = await axios.get('http://localhost:3000/proveedores'); 
+      setSuppliers(response.data);
     } catch (error) {
-      console.error('Error adding supplier:', error);
-      setError('post');
+      console.error('Error fetching suppliers:', error);
+      setError('Error al cargar los proveedores');
     } finally {
       setLoading(false);
-      setShowModal(false); // Cierra el modal después de agregar el proveedor
     }
   };
 
-  const handleUpdateSupplier = async (id, updateProveedor) => {
-    setLoading(true);
-    setError(null);
-    console.log('Datos enviados a la API:', updateProveedor);
-    console.log(suppliers)
+  const handleAddSupplier = async (supplier) => {
     try {
-      await axios.put(`http://localhost:3000/proveedor/${id}`, updateProveedor); // Cambia la URL según tu API
-      setSuppliers((prevSuppliers) =>
-        prevSuppliers.map((supplier) =>
-          supplier.id === id ? { ...supplier, ...updateProveedor} : supplier
-        ),
-      );
+      await axios.post('http://localhost:3000/proveedor', supplier); 
+      await fetchSuppliers(); 
+    } catch (error) {
+      console.error('Error adding supplier:', error);
+      setError('Error al agregar el proveedor');
+    } finally {
+      setShowModal(false);
+    }
+  };
+
+  const handleUpdateSupplier = async (id, updatedSupplier) => {
+    try {
+      await axios.put(`http://localhost:3000/proveedor/${id}`, updatedSupplier); 
+      await fetchSuppliers(); 
     } catch (error) {
       console.error('Error updating supplier:', error);
-      setError('put');
+      setError('Error al actualizar el proveedor');
     } finally {
-      setLoading(false);
       setEditSupplier(null);
       setShowModal(false);
     }
   };
 
   const handleDeleteSupplier = async (id) => {
-    setLoading(true);
-    setError(null);
     try {
-      await axios.delete(`http://localhost:3000/proveedor/${id}`); // Cambia la URL según tu API
-      setSuppliers((prevSuppliers) =>
-        prevSuppliers.filter((supplier) => supplier.id !== id)
-      );
+      await axios.delete(`http://localhost:3000/proveedor/${id}`); 
+      await fetchSuppliers(); 
     } catch (error) {
       console.error('Error deleting supplier:', error);
-      setError('delete');
-    } finally {
-      setLoading(false);
+      setError('Error al eliminar el proveedor');
     }
   };
 
   const handleEditClick = (supplier) => {
     setEditSupplier(supplier);
     setShowModal(true);
-    console.log(supplier)
   };
 
   const handleModalClose = () => {
@@ -102,26 +83,28 @@ const SupplierList = () => {
       <h1>Lista de Proveedores</h1>
       {error && <div className="alert alert-danger">{error}</div>}
       <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Proveedor</Button>
-      
+
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>telefono</th>
+            <th>Teléfono</th>
             <th>Email</th>
+            <th>categoria</th>
             <th>Acciones</th>
             
           </tr>
         </thead>
         <tbody>
           {suppliers.map((supplier) => (
-            <tr key={supplier.id}>
+            <tr key={supplier.proveedor_id}>
               <td>{supplier.nombre}</td>
               <td>{supplier.telefono}</td>
               <td>{supplier.correo}</td>
+              <td>{supplier.categoria_nombre}</td>
               <td>
-                <Button className='mx-2' onClick={() => handleEditClick(supplier)}>Editar</Button>
-                <Button onClick={() => handleDeleteSupplier(supplier.id)}>Eliminar</Button>
+                <Button className="mx-2" onClick={() => handleEditClick(supplier)}>Editar</Button>
+                <Button onClick={() => handleDeleteSupplier(supplier.proveedor_id)}>Eliminar</Button>
               </td>
             </tr>
           ))}
@@ -132,7 +115,7 @@ const SupplierList = () => {
         supplier={editSupplier}
         show={showModal}
         handleClose={handleModalClose}
-        onSave={editSupplier ? (updatedSupplier) => handleUpdateSupplier(editSupplier.id, updatedSupplier) : handleAddSupplier}
+        onSave={editSupplier ? (updatedSupplier) => handleUpdateSupplier(editSupplier.proveedor_id, updatedSupplier) : handleAddSupplier}
       />
     </div>
   );

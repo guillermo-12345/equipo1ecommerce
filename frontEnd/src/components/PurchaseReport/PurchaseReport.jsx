@@ -3,7 +3,8 @@ import ApexCharts from "apexcharts";
 import { Table, Form, Button, Row, FormSelect } from "react-bootstrap";
 
 const PurchaseReport = () => {
-  const [filteredData, setFilteredData] = useState([]);
+  const [allData, setAllData] = useState([]); 
+  const [filteredData, setFilteredData] = useState([]);  
   const [filters, setFilters] = useState({
     orderNumber: "",
     productName: "",
@@ -13,13 +14,14 @@ const PurchaseReport = () => {
     endDate: ""
   });
 
-  // Fetch data from API when component mounts
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:3000/compras");
         const data = await response.json();
-        setFilteredData(data);
+        setAllData(data);  
+        setFilteredData(data); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -28,10 +30,10 @@ const PurchaseReport = () => {
     fetchData();
   }, []);
 
-  // Update chart when filtered data changes
+  
   useEffect(() => {
     const chartData = filteredData.map((item) => ({
-      x: item.producto_nombre, // Now using the product name
+      x: item.producto_nombre, 
       y: item.cantidad
     }));
 
@@ -61,29 +63,44 @@ const PurchaseReport = () => {
       ...filters,
       [name]: value
     });
+    
   };
 
   const handleClearFilters = () => {
-    setFilters({ orderNumber: "", productName: "", category: "", supplier: "", startDate: "", endDate: "" });
-    setFilteredData([]);
+    setFilters({
+      orderNumber: "",
+      productName: "",
+      category: "",
+      supplier: "",
+      startDate: "",
+      endDate: ""
+    });
+    setFilteredData(allData); 
   };
 
   const applyFilters = () => {
-    const filtered = filteredData.filter(item => {
+    console.log("Aplicando filtros", filters);  
+    const filtered = allData.filter(item => {
       const itemDate = new Date(item.fecha_compra);
       const startDate = filters.startDate ? new Date(filters.startDate) : null;
       const endDate = filters.endDate ? new Date(filters.endDate) : null;
-
+  
       return (
         (!filters.orderNumber || item.compra_id.toString().includes(filters.orderNumber)) &&
         (!filters.productName || item.producto_nombre.toLowerCase().includes(filters.productName.toLowerCase())) &&
         (!filters.supplier || item.proveedor_nombre.toLowerCase().includes(filters.supplier.toLowerCase())) &&
+        (!filters.category || item.categoria_nombre.toLowerCase().includes(filters.category.toLowerCase())) &&
+        
         (!startDate || itemDate >= startDate) &&
         (!endDate || itemDate <= endDate)
       );
     });
     setFilteredData(filtered);
+    console.log("Datos filtrados", filteredData);  // Ver los datos después de aplicar los filtros
+
+
   };
+  
 
   return (
     <div className="justify-content-center container-fluid">
@@ -112,9 +129,9 @@ const PurchaseReport = () => {
             <Form.Label>Categoría</Form.Label>
             <FormSelect name="category" value={filters.category} onChange={handleFilterChange}>
               <option value="">Seleccionar categoría</option>
-              <option value="notebook">Notebook</option>
-              <option value="celular">Celular</option>
-              <option value="tablet">Tablet</option>
+              <option value="3">Notebook</option>
+              <option value="1">Celular</option>
+              <option value="2">Tablet</option>
             </FormSelect>
           </Form.Group>
           <Form.Group className="col-2" controlId="supplier">
@@ -161,17 +178,21 @@ const PurchaseReport = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item) => (
-            <tr key={item.compra_id}>
-              <td>{item.compra_id}</td>
-              <td>{item.cantidad}</td>
-              <td>{item.producto_nombre}</td> {/* Mostramos el nombre del producto */}
-              <td>{item.categoria_nombre}</td> {/* Mostramos el nombre de la categoría */}
-              <td>{item.proveedor_nombre}</td> {/* Mostramos el nombre del proveedor */}
-              <td>{item.fecha_compra}</td>
-            </tr>
-          ))}
-        </tbody>
+  {filteredData.map((item) => {
+    
+    return (
+      <tr key={item.compra_id}>
+        <td>{item.compra_id}</td>
+        <td>{item.cantidad}</td>
+        <td>{item.producto_nombre}</td>
+        <td>{item.categoria_nombre}</td>
+        <td>{item.proveedor_nombre}</td>
+        <td>{item.fecha_compra}</td>
+      </tr>
+    );
+  })}
+</tbody>
+
       </Table>
 
       <div id="chart"></div>

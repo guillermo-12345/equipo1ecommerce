@@ -20,7 +20,7 @@ function createCliente(req, res) {
     conexion.query(query, [nombre, cuit, correo], (err, result) => {
         if (err) {
             console.log(err);
-            return res.status(500).send("Error al crear el cliente"); 
+            return res.status(500).send("Error al crear el cliente", err); 
         } else {
             
             const nuevoCliente = { id: result.insertId, nombre, cuit, correo };
@@ -44,7 +44,7 @@ function getClientes(req, res) {
 
 function deleteCliente(req, res) {
     const { id } = req.params; 
-    const query = 'DELETE FROM cliente WHERE id = ?';
+    const query = 'DELETE FROM  cliente WHERE cliente_id = ?';
 
 
     conexion.query(query, [id], (err, result) => {
@@ -64,9 +64,9 @@ function deleteCliente(req, res) {
 function updateCliente(req, res) {
     const { id } = req.params; 
     const { nombre, cuit, correo } = req.body; 
-    const query = 'UPDATE cliente SET nombre = ?, cuit = ?, correo = ? WHERE id = ?';
+    const query = 'UPDATE cliente SET nombre = ?, cuit = ?, correo = ? WHERE cliente_id = ?';
 
-    // Ejecutamos la consulta
+   
     conexion.query(query, [nombre, cuit, correo, id], (err, result) => {
         if (err) {
             console.error(err); 
