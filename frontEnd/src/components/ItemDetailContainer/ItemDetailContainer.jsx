@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import ItemDetail from "../ItemDetail/ItemDetail"
 
 function ItemDetailContainer(){
     const [productDetail, setProductDetail] = useState(null)
@@ -34,20 +35,18 @@ function ItemDetailContainer(){
     
     return (
         <div className="d-flex justify-content-center ">
-          
-          <div className=" bg-primary ">
-            <h2>Nombre: {productDetail.nombre}</h2>
-            <div>
-                <img src={productDetail.imagen} alt="" />
-            </div>
-          </div>
-          <div className="bg-secondary">
-          <p>Descripción: {productDetail.descripcion}</p>
-          <p>precio: {productDetail.precio_venta}</p>
-          </div>
-          {/* Agrega más campos según los datos disponibles */}
+          <ItemDetail
+             id={productDetail.id}
+              category={productDetail.categoria}
+              title={productDetail.nombre}
+              description={productDetail.descripcion}
+              price={productDetail.precio_venta}
+              img={productDetail.imagen}
+              stock={productDetail.stock}
+             />
+    
         </div>
-      );
+    );
 }
 
 export default ItemDetailContainer
