@@ -166,7 +166,7 @@ const PurchaseReport = () => {
         <Button className="mt-4 mx-3 btn btn-secondary" onClick={handleClearFilters}>Borrar Filtros</Button>
       </Form>
 
-      <Table className="table-responsive table w-75 p-5 m-5" striped bordered hover>
+      <Table className="table-responsive table w-75 p-5 m-5 mx-auto" striped bordered hover>
         <thead>
           <tr>
             <th>Orden</th>

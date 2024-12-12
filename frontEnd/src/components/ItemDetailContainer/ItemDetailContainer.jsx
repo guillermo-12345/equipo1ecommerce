@@ -36,8 +36,8 @@ function ItemDetailContainer(){
     return (
         <div className="d-flex justify-content-center ">
           <ItemDetail
-             id={productDetail.id}
-              category={productDetail.categoria}
+             id={productDetail.producto_id}
+              category={productDetail.categoria_id}
               title={productDetail.nombre}
               description={productDetail.descripcion}
               price={productDetail.precio_venta}

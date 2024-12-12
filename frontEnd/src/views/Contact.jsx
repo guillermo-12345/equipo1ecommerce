@@ -1,71 +1,100 @@
 import React, { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
-export const Contact =()=>{
-  const [name, setName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+export const Contact = () => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    apellido: '',
+    email: '',
+    mensaje: '',
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Name:', name);
-    console.log('LastName:', lastName);
-    console.log('Email:', email);
-    console.log('Message:', message);
-    
-    alert('Hola ' + name+' '+lastName + ', gracias por ponerte en contacto con nosotros. A la brevedad te estaremos respondiendo.');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-     
-
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Formulario enviado:', formData);
+    alert(`Hola ${formData.nombre} ${formData.apellido}, gracias por tu mensaje.`);
+  };
 
   return (
-<form className="row m-xxl-5 p-xxl-5 g-3" onSubmit={handleSubmit}>
-  <div className="col-md-4">
-    <label for="validationServer01" className="form-label">Nombre</label>
-    <input type="text" className="form-control shadow" id="validationServer01" placeholder="Juan" required value={name} onChange={(e) => setName(e.target.value)}/>
-    <div className="valid-feedback">
-      ✅
-    </div>
-  </div>
-  <div className="col-md-4">
-    <label for="validationServer02" className="form-label">Apellido</label>
-    <input type="text" className="form-control shadow " id="validationServer02" placeholder="Perez" required  value={lastName} onChange={(e) => setLastName(e.target.value)}/>
-    <div className="valid-feedback">
-    ✅
-    </div>
-  </div>
-  <div className="col-md-4">
-    <label for="validationCustomUsername" className="form-label">Correo Electornico</label>
-    <div className="input-group has-validation">
-      <span className="input-group-text" id="inputGroupPrepend">@</span>
-      <input type="text" className="form-control shadow" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required onChange={(e) => setEmail(e.target.value)} />
-      <div className="invalid-feedback">
-        ❎Correo Electornico Incorrecto.
-      </div>
-    </div>
-  </div>
-  <div className="mb-3">
-    <label for="validationTextarea" className="form-label">Mensaje</label>
-    <textarea className="form-control m-xxl-auto w-50 justify-content-center shadow"  id="validationTextarea" placeholder="Required example textarea"  required onChange={(e) => setMessage(e.target.value)} />
-    <div className="invalid-feedback">
-      ...Mensaje
-    </div>
-  </div>
-  <div className="col-2 mx-5 ">
-    <div className="form-check">
-      <input className="form-check-input  shadow" type="checkbox" value=""  aria-describedby="" required></input>
-      <label className="form-check-label fw-lighter" for="">
-        Aceptar Terminos y Condiciones
-      </label>
-      <div id="invalidCheck3Feedback" className="invalid-feedback">
+    <div
+      className="container mt-5 p-4 shadow-sm"
+      style={{
+        maxWidth: '400px',
+        borderRadius: '10px',
+        backgroundColor: '#ffffff',
+      }}
+    >
+      <h2 className="mb-4 text-center">Formulario de Contacto</h2>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="formNombre">
+          <Form.Label className="fw-bold ">Nombre</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Ingresa tu nombre"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
 
-      </div>
+        <Form.Group className="mb-3" controlId="formApellido">
+          <Form.Label className="fw-bold">Apellido</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Ingresa tu apellido"
+            name="apellido"
+            value={formData.apellido}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formEmail">
+          <Form.Label className="fw-bold">Correo Electrónico</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Ingresa tu correo"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formMensaje">
+          <Form.Label className="fw-bold">Mensaje</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            placeholder="Escribe tu mensaje"
+            name="mensaje"
+            value={formData.mensaje}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formTerminos">
+          <Form.Check
+            type="checkbox"
+            label="Aceptar Términos y Condiciones"
+            required
+          />
+        </Form.Group>
+
+        <Button variant="primary" type="submit" className="w-100">
+          Enviar
+        </Button>
+      </Form>
     </div>
-  </div>
-  <div className="col-11">
-    <button className="btn btn-primary" type="submit">Aceptar</button>
-  </div>
-</form>
   );
-}
+};

@@ -1,46 +1,50 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
+// import { getDocs, collection } from 'firebase/firestore';
+// import { db } from '../config/firebase'; // Asegúrate de tener la configuración de Firebase en este archivo
 
-export const Protected = () => {
-    
-    const [users, setUsers] = useState([])
-    useEffect(() => {
-        axios.get("http://localhost:3001/usuario",) 
-            
+// export const Protected = () => {
+//     const [users, setUsers] = useState([]);
 
-            .then(response => {
-                setUsers(response.data.usuarios)
-            })
-            .catch(error => {
-                console.error(error) 
-                
-            })
-    }
-    , [])
-    return (
-        <div>
-            <h2>Lista de Usuarios</h2>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map(user => {
-                        return(
-                        <tr key={user.id}>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                        </tr>
-                    )})}
-                </tbody>
-            </table>
-        </div>
-    )   
+//     useEffect(() => {
+//         // Obtener los usuarios desde Firebase
+//         const fetchUsers = async () => {
+//             try {
+//                 const querySnapshot = await getDocs(collection(db, "usuarios"));
+//                 const usersList = querySnapshot.docs.map(doc => ({
+//                     id: doc.id,
+//                     ...doc.data(),
+//                 }));
+//                 setUsers(usersList);
+//             } catch (error) {
+//                 console.error("Error al obtener usuarios:", error);
+//             }
+//         };
 
-}
+//         fetchUsers();
+//     }, []);
+
+//     return (
+//         <div>
+//             <h2>Lista de Usuarios</h2>
+//             <table className="table">
+//                 <thead>
+//                     <tr>
+//                         <th>Nombre</th>
+//                         <th>Email</th>
+//                     </tr>
+//                 </thead>
+//                 <tbody>
+//                     {users.map(user => (
+//                         <tr key={user.id}>
+//                             <td>{user.name}</td>
+//                             <td>{user.email}</td>
+//                         </tr>
+//                     ))}
+//                 </tbody>
+//             </table>
+//         </div>
+//     );
+// };
 
 
 /* import React, { useState, useEffect, useRef } from 'react';

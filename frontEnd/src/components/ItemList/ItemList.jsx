@@ -6,6 +6,7 @@ export const ItemList = ({ products }) => {
         <div className="container">
           <div className="d-flex justify-content-evenly flex-wrap">
           {products.map(prod => <Item key={prod.id}{...prod} />)}
+          
         </div>
       </div>
     );

@@ -270,6 +270,7 @@ const ProductList = () => {
     setEditProduct(null); 
     setIsEditing(false);
     setShowModal(true); 
+    
   };
 
   if (loading) {
@@ -282,6 +283,7 @@ const ProductList = () => {
       {error && <div className="alert alert-danger">{error}</div>} 
       <div className="d-flex flex-wrap justify-content-around">
         {products.map((product) => (
+          console.log(product.categoria_id),
           <Item
           key={product.producto_id} 
           id={product.producto_id} 
@@ -290,7 +292,7 @@ const ProductList = () => {
           price={product.precio_venta}
           purchasePrice={product.precio_compra}
           description={product.descripcion}
-          category={product.categoria} 
+          category={product.categoria_id} 
           stock={product.stock} 
           showEditButton={true}
           showDeleteButton={true}
@@ -298,6 +300,8 @@ const ProductList = () => {
           onDelete={handleDeleteProduct}
           className="product-item"
           />
+
+          
         ))}
       </div>
       <Button variant="primary" onClick={handleAddButtonClick}>

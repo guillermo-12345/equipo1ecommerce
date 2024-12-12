@@ -69,7 +69,7 @@ import { Link } from 'react-router-dom'
                     to="/"
                     className="btn btn-success btn-block "
                   >
-                    Seguir comprando
+                    Seguir comprando 
                   </Link>
                 </div>
 

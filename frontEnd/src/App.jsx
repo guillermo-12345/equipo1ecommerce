@@ -8,16 +8,20 @@ import { useEffect } from 'react';
 import { Contact } from './views/Contact';
 import { Cart } from './views/Cart';
 import CheckOut from './views/CheckOut';
+import CheckoutForm from './views/CheckOut';
 import SupplierList from './components/SupplierList/SupplierList';
 import SalesReport from './components/SalesReport/SalesReport';
 import PurchaseReport from './components/PurchaseReport/PurchaseReport';
 import ProductList from './components/ProductList/ProductList';
 import ClienteList from './components/ClientesList/ClientesList';
-import { Auth } from './components/Login/Auth';
-import { Protected } from './components/Login/Protected';
+import  Auth  from "./components/Login/Auth";
+import { useAuth } from './components/context/AuthContext';
+import { AuthProvider } from './components/context/AuthContext'; 
+
 
 function App() {
   return (
+    <AuthProvider>
     <div className="App">
       <NavBar />
 
@@ -34,14 +38,7 @@ function App() {
         <Route path="/purchase-report" element={<PurchaseReport />} />
         <Route path="/clientes" element={<ClienteList />} />
         <Route path="/auth/login" element={<Auth />} />
-        <Route
-          path="/protected"
-          element={
-            <ProtectedRoute>
-              <Protected />
-            </ProtectedRoute>
-          }
-        />
+        
         <Route path="*" element={<h1>404 NOT FOUND</h1>} />
       </Routes>
 
@@ -50,7 +47,10 @@ function App() {
           <button className="btn btn-outline-success">🏠 HOME</button>
         </Link>
       </footer>
+
+ 
     </div>
+    </AuthProvider>
   );
 }
 

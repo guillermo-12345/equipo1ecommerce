@@ -11,14 +11,35 @@ export const CartProvider = ({ children }) => {
     console.log(cart);
 
     const addItem = (item, quantity) => {
-        if (!isInCart(item.id)) {
-            setCart(prev => [...prev, { ...item, quantity }]);
-            setTotalQuantity(prev => prev + quantity);
-            setTotal(prev => prev + item.price * quantity);
-        } else {
-            console.error('El producto ya fue agregado');
+        console.log("Item recibido:", item); // Verifica los datos del producto
+        console.log("ID del producto:", item.id);
+        console.log("cantidad",quantity)
+    
+        if (!item.id) {
+            console.error("El producto no tiene un ID válido:", item);
+            return;
         }
+    
+        if (isInCart(item.id)) {
+            setCart(prev =>
+                prev.map(prod =>
+                    prod.id === item.id
+                        ? { ...prod, quantity: prod.quantity + quantity }
+                        : prod
+                )
+            );
+            console.log("El producto ya fue agregado");
+        } else {
+            setCart(prev => [...prev, { ...item, quantity }]);
+            console.log("Producto agregado al carrito:", { ...item, quantity });
+        }
+    
+        setTotalQuantity(prev => prev + quantity);
+        setTotal(prev => prev + item.price * quantity);
     };
+    
+
+    
 
     const removeItem = (itemId) => {
         const cartUpdated = cart.find(item => item.id === itemId);
@@ -34,7 +55,10 @@ export const CartProvider = ({ children }) => {
     };
 
     const isInCart = (itemId) => {
-        return cart.some(prod => prod.id === itemId);
+        // return cart.some(prod => prod.id === itemId);
+        const exists = cart.some(prod => prod.id === itemId);
+    console.log(`¿Está el producto ${itemId} en el carrito?:`, exists);
+    return exists;
     };
 
     return (
