@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
+// const express = require('express');
+// const router = express.Router();
 
-const  procesarVenta  = require('../controllers/procesoVentaController');
+// const  procesarVenta  = require('../controllers/procesoVentaController');
 
 
-router.post('/venta', procesarVenta);
+// router.post('/venta', procesarVenta);
 
-module.exports = router;
+// module.exports = router;
