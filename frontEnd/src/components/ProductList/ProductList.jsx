@@ -172,6 +172,7 @@ import axios from 'axios';
 import Item from '../Item/Item';
 import ProductFormModal from '../ProductForm/ProductForm'; 
 import Button from 'react-bootstrap/Button';
+import { useAuth } from "../context/AuthContext"; 
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -181,7 +182,7 @@ const ProductList = () => {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [proveedores, setProveedores] = useState([]); 
-
+  const { user } = useAuth(); 
   const fetchProducts = async () => {
     setLoading(true);
     setError(null);
@@ -276,11 +277,11 @@ const ProductList = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+ 
   return (
     <div className="product-list-container">
       <h2>Lista de Productos</h2>
-      {error && <div className="alert alert-danger">{error}</div>} 
+      {user ? (<div>{error && <div className="alert alert-danger">{error}</div>} 
       <div className="d-flex flex-wrap justify-content-around">
         {products.map((product) => (
           console.log(product.categoria_id),
@@ -313,7 +314,10 @@ const ProductList = () => {
         product={editProduct}
         onSave={isEditing ? handleUpdateProduct : handleAddProduct}
         proveedores={proveedores} 
-      />
+      /></div> ): ( <div className="alert alert-warning" role="alert">
+        Necesitas <a href="/auth/login" className="alert-link">loguearte</a> para ver este sitio
+      </div>)}
+      
     </div>
   );
 };

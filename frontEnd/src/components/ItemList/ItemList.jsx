@@ -1,16 +1,22 @@
-import React from 'react';
-import Item from '../Item/Item';
+// import React from 'react';
+// import Item from '../Item/Item';
+// import { useAuth } from "../context/AuthContext";
 
-export const ItemList = ({ products }) => {
-    return (
-        <div className="container">
-          <div className="d-flex justify-content-evenly flex-wrap">
-          {products.map(prod => <Item key={prod.id}{...prod} />)}
-          
-        </div>
-      </div>
-    );
-  };
-  
+// export const ItemList = ({ products }) => {
 
-export default ItemList;
+//   const { user } = useAuth();
+//   return (
+
+
+//     <div className="container">
+
+//       <div className="d-flex justify-content-evenly flex-wrap">
+//         {products.map(prod => <Item key={prod.id}{...prod} />)}
+
+//       </div>
+//     </div>
+//   );
+// };
+
+
+// export default ItemList;

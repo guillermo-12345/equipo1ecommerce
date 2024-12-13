@@ -52,17 +52,20 @@ const NavBar = () => {
                     <NavLink className="inactive" to={"/category/celular"}>Celulares</NavLink>
                     <NavLink className="inactive" to={"/category/tablet"}>Tablets</NavLink>
                   </NavDropdown>
-                  <NavLink className="inactive" to={"/Clientes"}>Clientes</NavLink>
-                  <NavLink className="inactive" to={"/suppliers"}>Proveedores</NavLink>
-                  <NavLink className="inactive" to={"/products"}>Productos</NavLink>
-                  <NavDropdown
+                  {user ? (<><NavLink className="inactive" to={"/Clientes"}>Clientes</NavLink>
+                    <NavLink className="inactive" to={"/suppliers"}>Proveedores</NavLink>
+                    <NavLink className="inactive" to={"/products"}>Productos</NavLink></>) : ("")}
+
+
+                  
+                    {user ? (<><NavDropdown
                     title="Reportes"
                     className="drop"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
-                  >
-                    <NavLink className="inactive" to={"/sales-report"}>Ventas</NavLink>
-                    <NavLink className="inactive" to={"/purchase-report"}>Compras</NavLink>
-                  </NavDropdown>
+                  > <NavLink className="inactive" to={"/sales-report"}>Ventas</NavLink>
+                      <NavLink className="inactive" to={"/purchase-report"}>Compras</NavLink> </NavDropdown></>):("")}
+                   
+                 
                   <NavLink className="inactive" to={"/contact"}>Contacto</NavLink>
 
                   {/* Botón para ir al login */}
@@ -71,11 +74,11 @@ const NavBar = () => {
                   </NavLink> */}
 
                   {user ? (
-                    
+
                     <NavLink to="/auth/login">
                       <span>Hola, {user.name}</span>
-                     
-                      </NavLink>
+
+                    </NavLink>
                   ) : (
                     <NavLink to="/auth/login">
                       <button className="btn btn-primary">Login</button>

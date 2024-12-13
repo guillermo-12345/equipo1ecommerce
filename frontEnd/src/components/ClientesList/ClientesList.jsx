@@ -3,6 +3,7 @@ import axios from 'axios';
 import ClientesFormModal from '../ClientesForm/ClientesForm';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import { useAuth } from "../context/AuthContext"; 
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState([]);
@@ -10,7 +11,7 @@ const ClienteList = () => {
   const [editCliente, setEditCliente] = useState(null);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
+  const { user } = useAuth(); 
   useEffect(() => {
     fetchClientes();
   }, []);
@@ -81,7 +82,7 @@ const ClienteList = () => {
   return (
     <div>
       <h1>Lista de Clientes</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
+      {user ? (<div>{error && <div className="alert alert-danger">{error}</div>}
       <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Cliente</Button>
       
       <Table striped bordered hover>
@@ -113,7 +114,10 @@ const ClienteList = () => {
         show={showModal}
         handleClose={handleModalClose}
         onSave={editCliente ? (updatedCliente) => handleUpdateCliente(editCliente.cliente_id, updatedCliente) : handleAddCliente}
-      />
+      /></div>):(<div className="alert alert-warning" role="alert">
+        Necesitas <a href="/auth/login" className="alert-link">loguearte</a> para ver este sitio
+      </div>)}
+      
     </div>
   );
 };

@@ -3,6 +3,7 @@ import axios from 'axios';
 import SupplierFormModal from '../SupplierForm/SupplierForm'; 
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import { useAuth } from "../context/AuthContext"; 
 
 const SupplierList = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -10,6 +11,7 @@ const SupplierList = () => {
   const [editSupplier, setEditSupplier] = useState(null);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const { user } = useAuth(); 
 
   useEffect(() => {
     fetchSuppliers();
@@ -81,7 +83,7 @@ const SupplierList = () => {
   return (
     <div>
       <h1>Lista de Proveedores</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
+      {user ? (<>{error && <div className="alert alert-danger">{error}</div>}
       <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Proveedor</Button>
 
       <Table striped bordered hover>
@@ -116,7 +118,10 @@ const SupplierList = () => {
         show={showModal}
         handleClose={handleModalClose}
         onSave={editSupplier ? (updatedSupplier) => handleUpdateSupplier(editSupplier.proveedor_id, updatedSupplier) : handleAddSupplier}
-      />
+      /></>):(<div className="alert alert-warning" role="alert">
+        Necesitas <a href="/auth/login" className="alert-link">loguearte</a> para ver este sitio
+      </div>)}
+      
     </div>
   );
 };

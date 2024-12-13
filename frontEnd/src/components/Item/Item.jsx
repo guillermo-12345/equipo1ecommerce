@@ -4,8 +4,11 @@ import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 
 const Item = ({ id, title, img, price, description, purchasePrice, showDeleteButton, showEditButton, onDelete, onEdit }) => {
-    return (
+ 
+  return (
+    
       <div className="card shadow" style={{ width: '20rem', margin: '.5rem' }}>
+        
         <img src={img} className="card-img-top shadow rounded-2 object-fit-fill p-3" alt={title} />
         <div className="card-body">
           <p className=" text-uppercase card-title">{title}</p>
