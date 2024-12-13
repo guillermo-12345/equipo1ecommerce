@@ -4,23 +4,32 @@ FROM node:18
 # Configuramos el directorio de trabajo
 WORKDIR /app
 
-# Copiamos el package.json y package-lock.json desde la raíz
-COPY package.json package-lock.json ./ 
+# Copiamos los archivos package.json y package-lock.json del front-end al contenedor
+COPY frontEnd/package.json frontEnd/package-lock.json ./frontEnd/
 
-# Instalamos las dependencias generales del proyecto (backend y frontend)
-RUN npm install
+# Copiamos toda la carpeta frontEnd al contenedor
+COPY frontEnd /app/frontEnd/
 
-# Copiamos todo el código fuente
-COPY . . 
-
-# Construimos la aplicación front-end
+# Instalamos las dependencias del front-end
 WORKDIR /app/frontEnd
 RUN npm install
+
+# Instalar curl y wait-for-it en el contenedor backend
+RUN apt-get update && apt-get install -y curl
+RUN curl -o /wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && chmod +x /wait-for-it.sh
+
+
+# Construimos la aplicación front-end
 RUN npm run build
 
 # Volvemos al directorio raíz para el back-end
 WORKDIR /app/backEnd
-RUN npm install  # Aseguramos que las dependencias del backend estén instaladas
+
+# Copiamos toda la carpeta backEnd al contenedor
+COPY backEnd /app/backEnd/
+
+# Instalamos las dependencias del back-end
+RUN npm install
 
 # Exponemos el puerto en el que el servidor va a correr (puerto 3000 para Express)
 EXPOSE 3000
