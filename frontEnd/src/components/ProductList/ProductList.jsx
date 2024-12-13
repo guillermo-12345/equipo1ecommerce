@@ -173,7 +173,7 @@ import Item from '../Item/Item';
 import ProductFormModal from '../ProductForm/ProductForm'; 
 import Button from 'react-bootstrap/Button';
 import { useAuth } from "../context/AuthContext"; 
-
+import { Navigate } from 'react-router-dom';
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -314,9 +314,10 @@ const ProductList = () => {
         product={editProduct}
         onSave={isEditing ? handleUpdateProduct : handleAddProduct}
         proveedores={proveedores} 
-      /></div> ): ( <div className="alert alert-warning" role="alert">
-        Necesitas <a href="/auth/login" className="alert-link">loguearte</a> para ver este sitio
-      </div>)}
+      /></div> ): ( <><div className="alert alert-warning" role="alert">
+        Necesitaslogueartepara ver este sitio
+      </div>
+      {<Navigate to="/" />}</>)}
       
     </div>
   );

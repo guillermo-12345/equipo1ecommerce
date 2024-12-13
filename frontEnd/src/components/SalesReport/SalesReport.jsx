@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ApexCharts from "apexcharts";
 import { Table, Form, Button, Row } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext"
+import { Navigate } from 'react-router-dom';
 
 const SalesReport = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -10,6 +12,7 @@ const SalesReport = () => {
     endDate: "",
     clientName: ""
   });
+    const { user } = useAuth(); 
 
   useEffect(() => {
     
@@ -85,8 +88,7 @@ const SalesReport = () => {
   return (
     <div className="container-fluid">
       <h1>Reporte de Ventas</h1>
-      
-      <Row className="justify-content-center">
+      {user ? (<><Row className="justify-content-center">
         <Form className="col-12 col-md-10">
           <Row className="mb-3">
             <Form.Group className="col-md-3" controlId="orderNumber">
@@ -136,11 +138,14 @@ const SalesReport = () => {
             Limpiar Filtros
           </Button>
         </Form>
-      </Row>
+      </Row></>):("")}
+      
+      
+     <div id="chart" style={{ marginTop: "30px" }}></div>
 
-      <div id="chart" style={{ marginTop: "30px" }}></div>
-
-      <Table className="table table-bordered table-striped table-hover mt-4">
+      
+      {user ? (<><Table className="table table-bordered table-striped table-hover mt-4">
+        
         <thead>
           <tr>
             <th>#</th>
@@ -150,6 +155,7 @@ const SalesReport = () => {
             <th>Nombre Producto</th>
           </tr>
         </thead>
+        
         <tbody>
           {filteredSales.map((sale) => (
             <tr key={sale.id}>
@@ -161,7 +167,10 @@ const SalesReport = () => {
             </tr>
           ))}
         </tbody>
-      </Table>
+      </Table></> ):(<>{<Navigate to="/" />}</>)}
+      
+      
+     
     </div>
   );
 };

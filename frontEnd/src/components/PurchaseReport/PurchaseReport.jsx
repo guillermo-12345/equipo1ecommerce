@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ApexCharts from "apexcharts";
 import { Table, Form, Button, Row, FormSelect } from "react-bootstrap";
+import { useAuth } from "../context/AuthContext";
+import { Navigate } from 'react-router-dom';
 
 const PurchaseReport = () => {
-  const [allData, setAllData] = useState([]); 
-  const [filteredData, setFilteredData] = useState([]);  
+  const [allData, setAllData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({
     orderNumber: "",
     productName: "",
@@ -13,15 +15,15 @@ const PurchaseReport = () => {
     startDate: "",
     endDate: ""
   });
+  const { user } = useAuth();
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:3000/compras");
         const data = await response.json();
-        setAllData(data);  
-        setFilteredData(data); 
+        setAllData(data);
+        setFilteredData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -30,10 +32,10 @@ const PurchaseReport = () => {
     fetchData();
   }, []);
 
-  
+
   useEffect(() => {
     const chartData = filteredData.map((item) => ({
-      x: item.producto_nombre, 
+      x: item.producto_nombre,
       y: item.cantidad
     }));
 
@@ -63,7 +65,7 @@ const PurchaseReport = () => {
       ...filters,
       [name]: value
     });
-    
+
   };
 
   const handleClearFilters = () => {
@@ -75,22 +77,22 @@ const PurchaseReport = () => {
       startDate: "",
       endDate: ""
     });
-    setFilteredData(allData); 
+    setFilteredData(allData);
   };
 
   const applyFilters = () => {
-    console.log("Aplicando filtros", filters);  
+    console.log("Aplicando filtros", filters);
     const filtered = allData.filter(item => {
       const itemDate = new Date(item.fecha_compra);
       const startDate = filters.startDate ? new Date(filters.startDate) : null;
       const endDate = filters.endDate ? new Date(filters.endDate) : null;
-  
+
       return (
         (!filters.orderNumber || item.compra_id.toString().includes(filters.orderNumber)) &&
         (!filters.productName || item.producto_nombre.toLowerCase().includes(filters.productName.toLowerCase())) &&
         (!filters.supplier || item.proveedor_nombre.toLowerCase().includes(filters.supplier.toLowerCase())) &&
         (!filters.category || item.categoria_nombre.toLowerCase().includes(filters.category.toLowerCase())) &&
-        
+
         (!startDate || itemDate >= startDate) &&
         (!endDate || itemDate <= endDate)
       );
@@ -100,12 +102,12 @@ const PurchaseReport = () => {
 
 
   };
-  
+
 
   return (
     <div className="justify-content-center container-fluid">
       <h1>Reporte de Compras</h1>
-      <Form className="container-fluid justify-content-center my-4">
+      {user ? (<><Form className="container-fluid justify-content-center my-4">
         <Row className="justify-content-center">
           <Form.Group className="col-1" controlId="orderNumber">
             <Form.Label>Orden</Form.Label>
@@ -155,6 +157,7 @@ const PurchaseReport = () => {
           <Form.Group className="col-2" controlId="endDate">
             <Form.Label>Fecha Fin</Form.Label>
             <Form.Control
+
               type="date"
               name="endDate"
               value={filters.endDate}
@@ -178,22 +181,22 @@ const PurchaseReport = () => {
           </tr>
         </thead>
         <tbody>
-  {filteredData.map((item) => {
-    
-    return (
-      <tr key={item.compra_id}>
-        <td>{item.compra_id}</td>
-        <td>{item.cantidad}</td>
-        <td>{item.producto_nombre}</td>
-        <td>{item.categoria_nombre}</td>
-        <td>{item.proveedor_nombre}</td>
-        <td>{item.fecha_compra}</td>
-      </tr>
-    );
-  })}
-</tbody>
+          {filteredData.map((item) => {
 
-      </Table>
+            return (
+              <tr key={item.compra_id}>
+                <td>{item.compra_id}</td>
+                <td>{item.cantidad}</td>
+                <td>{item.producto_nombre}</td>
+                <td>{item.categoria_nombre}</td>
+                <td>{item.proveedor_nombre}</td>
+                <td>{item.fecha_compra}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+
+      </Table></>):(<>{<Navigate to="/" />}</>)}
 
       <div id="chart"></div>
     </div>

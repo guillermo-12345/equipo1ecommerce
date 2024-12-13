@@ -4,6 +4,7 @@ import SupplierFormModal from '../SupplierForm/SupplierForm';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import { useAuth } from "../context/AuthContext"; 
+import { Navigate } from 'react-router-dom';
 
 const SupplierList = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -118,9 +119,10 @@ const SupplierList = () => {
         show={showModal}
         handleClose={handleModalClose}
         onSave={editSupplier ? (updatedSupplier) => handleUpdateSupplier(editSupplier.proveedor_id, updatedSupplier) : handleAddSupplier}
-      /></>):(<div className="alert alert-warning" role="alert">
-        Necesitas <a href="/auth/login" className="alert-link">loguearte</a> para ver este sitio
-      </div>)}
+      /></>):( <><div className="alert alert-warning" role="alert">
+        Necesitaslogueartepara ver este sitio
+      </div>
+      {<Navigate to="/" />}</>)}
       
     </div>
   );

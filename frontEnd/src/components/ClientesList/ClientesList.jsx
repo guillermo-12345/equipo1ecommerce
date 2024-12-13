@@ -4,6 +4,7 @@ import ClientesFormModal from '../ClientesForm/ClientesForm';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import { useAuth } from "../context/AuthContext"; 
+import { Navigate } from 'react-router-dom';
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState([]);
@@ -114,9 +115,10 @@ const ClienteList = () => {
         show={showModal}
         handleClose={handleModalClose}
         onSave={editCliente ? (updatedCliente) => handleUpdateCliente(editCliente.cliente_id, updatedCliente) : handleAddCliente}
-      /></div>):(<div className="alert alert-warning" role="alert">
-        Necesitas <a href="/auth/login" className="alert-link">loguearte</a> para ver este sitio
-      </div>)}
+      /></div>):( <><div className="alert alert-warning" role="alert">
+        Necesitaslogueartepara ver este sitio
+      </div>
+      {<Navigate to="/" />}</>)}
       
     </div>
   );
