@@ -77,5 +77,5 @@ RUN npm install
 EXPOSE 3000
 
 # Comando para iniciar el back-end
-CMD ["npm", "server.js"]
+CMD ["npm", "start"]
 
