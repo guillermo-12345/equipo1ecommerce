@@ -76,6 +76,8 @@ RUN npm install
 # Exponemos el puerto en el que el servidor va a correr (puerto 3000 para Express)
 EXPOSE 3000
 
-# Comando para iniciar el back-end
-CMD ["npm", "start"]
+
+# Comando para iniciar el backend con espera a la base de datos
+CMD ["./wait-for-it.sh", "mysql:3306", "--", "npm", "start"]
+
 
