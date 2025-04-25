@@ -7,7 +7,7 @@ const dbConfig = {
     port: process.env.DB_PORT ||3006,
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'MordoDB',
-    database: process.DB_NAME || 'dbtp5'
+    database: process.env.DB_NAME || 'dbtp5'
    
 };
 
