@@ -24,7 +24,40 @@ function getCompras(req, res) {
         res.json(result);
     });
 }
+
+function createCompra(req, res) {
+    const { name, email, phone, cuit, items } = req.body;
+  
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: "No se recibieron productos en la compra" });
+    }
+  
+    const fecha = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
+  
+    const values = items.map(item => ([
+      item.id,               
+      1,                     
+      item.quantity,
+      item.price,
+      fecha
+    ]));
+  
+    const query = `
+      INSERT INTO compras (producto_id, proveedor_id, cantidad, precio, fecha_compra)
+      VALUES ?
+    `;
+  
+    conexion.query(query, [values], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Error al guardar la compra" });
+      }
+      res.status(201).json({ message: "Compra registrada correctamente", result });
+    });
+}
+
+
 module.exports = {
-    getCompras
-   
+    getCompras,
+    createCompra
 };

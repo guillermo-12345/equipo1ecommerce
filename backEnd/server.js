@@ -9,11 +9,11 @@ const authRoutes = require('./routes/authRoute');
 // const  procesarVenta = require('./controllers/procesoVentaController');
 const conexion = require('../backEnd/db/conection');
 const app = express();
-const port = 3000;
+const port = process.env.PORT  || 3000
 
 
 app.use(cors({
-    origin: 'http://localhost:3001',
+    origin: process.env.CORS_ORIGIN,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }));

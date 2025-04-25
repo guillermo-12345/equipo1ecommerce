@@ -144,32 +144,50 @@
 
 // export default CheckoutForm;
 
+
+/* v1 */
+
+
+
+/* 
+
 import { Button, Form, Row } from 'react-bootstrap';
+import { useContext } from "react";
+import { CartContext } from '../../context/cartContext';
 
 const CheckoutForm = ({ onConfirm, formData, onInputChange }) => {
+
+    const { cart, addToCart, removeFromCart } = useContext(CartContext);
+
+    // Imprimir el contenido del contexto en la consola
+    console.log('Contenido del carrito:', cart);
     const handleConfirm = (event) => {
         event.preventDefault();
 
-        const { name, phone, email } = formData;
+        const { name, phone,cuit, email } = formData;
 
         const userData = {
             name,
             phone,
-            email
+            cuit,
+            email,
+            items:cart,
         };
 
         onConfirm(userData);  
     };
 
+  
     return (
         <div className='ContainerFormCheckout'>
+            
             <Form onSubmit={handleConfirm} className='justify-content-center'>
                 <Row className='justify-content-center'>
                     <Form.Group className="mb-3 col-4">
                         <Form.Label>Nombre</Form.Label>
                         <Form.Control
                             type='text'
-                            placeholder='Guille Ibañez'
+                            placeholder='joselito'
                             name='name'
                             value={formData.name}
                             onChange={onInputChange}
@@ -181,12 +199,23 @@ const CheckoutForm = ({ onConfirm, formData, onInputChange }) => {
                         <Form.Label>Teléfono</Form.Label>
                         <Form.Control
                             type='text'
-                            placeholder='11 #### ####'
+                            placeholder='+54 9 351 654-3210'
                             name='phone'
                             value={formData.phone}
                             onChange={onInputChange}
                         />
                         <Form.Text className="text-muted">Celular o personal</Form.Text>
+                    </Form.Group>
+                    <Form.Group className="mb-3 col-3">
+                        <Form.Label>cuit</Form.Label>
+                        <Form.Control
+                            type='text'
+                            placeholder='30-12345678-3'
+                            name='cuit'
+                            value={formData.cuit}
+                            onChange={onInputChange}
+                        />
+                        <Form.Text className="text-muted">cuit</Form.Text>
                     </Form.Group>
                 </Row>
 
@@ -198,7 +227,108 @@ const CheckoutForm = ({ onConfirm, formData, onInputChange }) => {
                             name="email"
                             value={formData.email}
                             required
-                            placeholder='xx@xxx.xx'
+                            placeholder='a@xxx.xx'
+                            onChange={onInputChange}
+                        />
+                        <Form.Text className="text-muted">Validar Email</Form.Text>
+                    </Form.Group>
+                </Row>
+
+                <Button type='submit'>Crear Orden</Button>
+            </Form>
+        </div>
+    );
+};
+
+export default CheckoutForm;
+*/
+
+/*v2 */
+
+import { Button, Form, Row } from 'react-bootstrap';
+import { useContext } from "react";
+import { CartContext } from '../../context/cartContext';
+import axios from 'axios';
+
+const CheckoutForm = ({ formData, onInputChange }) => {
+    const { cart, clearCart } = useContext(CartContext);
+
+    const handleConfirm = async (event) => {
+        event.preventDefault();
+
+        const { name, phone, cuit, email } = formData;
+
+        const userData = {
+            name,
+            phone,
+            cuit,
+            email,
+            items: cart,
+        };
+
+        console.log("Datos de usuario:", userData);
+
+        try {
+            const response = await axios.post("http://localhost:3000/compras", userData);
+            console.log("Respuesta del servidor:", response.data);
+            alert("Compra registrada con éxito!");
+            clearCart(); // Vacía el carrito después de enviar la compra
+        } catch (error) {
+            console.error("Error al enviar la compra:", error);
+            alert("Hubo un error al registrar la compra.");
+        }
+    };
+
+    return (
+        <div className='ContainerFormCheckout'>
+            <Form onSubmit={handleConfirm} className='justify-content-center'>
+                <Row className='justify-content-center'>
+                    <Form.Group className="mb-3 col-4">
+                        <Form.Label>Nombre</Form.Label>
+                        <Form.Control
+                            type='text'
+                            placeholder='joselito'
+                            name='name'
+                            value={formData.name}
+                            onChange={onInputChange}
+                        />
+                        <Form.Text className="text-muted">Nombre Completo</Form.Text>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3 col-3">
+                        <Form.Label>Teléfono</Form.Label>
+                        <Form.Control
+                            type='text'
+                            placeholder='+54 9 351 654-3210'
+                            name='phone'
+                            value={formData.phone}
+                            onChange={onInputChange}
+                        />
+                        <Form.Text className="text-muted">Celular o personal</Form.Text>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3 col-3">
+                        <Form.Label>CUIT</Form.Label>
+                        <Form.Control
+                            type='text'
+                            placeholder='30-12345678-3'
+                            name='cuit'
+                            value={formData.cuit}
+                            onChange={onInputChange}
+                        />
+                        <Form.Text className="text-muted">CUIT</Form.Text>
+                    </Form.Group>
+                </Row>
+
+                <Row className='justify-content-center'>
+                    <Form.Group className="mb-3 col-5">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            required
+                            placeholder='a@xxx.xx'
                             onChange={onInputChange}
                         />
                         <Form.Text className="text-muted">Validar Email</Form.Text>
