@@ -7,14 +7,14 @@ import CheckoutForm from "../CheckoutForm/CheckoutForm"
 
 
 
-const ItemDetail =({id,category,title,description,price,img,stock}) => {
+const ItemDetail =({id,category,title,description,price,img,stock, proveedor_id,producto_id}) => {
     const [quantityAdded,setQuantityAdded] =useState(false)
     const {addItem}=useContext(CartContext)
 
      const handleOnAdd=(quantity) => {
         setQuantityAdded(true)
 
-    const product={id,title, price,img}
+    const product={id,title, price,img,proveedor_id,producto_id}
     
         addItem(product,quantity)
     }
@@ -35,7 +35,7 @@ const ItemDetail =({id,category,title,description,price,img,stock}) => {
             <p className=" fst-italic fw-bolder">Stock Disponible {stock}</p>
             <p> ${price}</p>
             <p>pid {category}</p>
-            {console.log(category)}
+            {console.log("category!", category, "aa",title)}
         </section>
         <footer className=" card-footer">
             {

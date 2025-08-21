@@ -177,6 +177,7 @@ const PurchaseReport = () => {
             <th>Producto</th>
             <th>Categoría</th>
             <th>Proveedor</th>
+            <th>Precio compra</th>
             <th>Fecha</th>
           </tr>
         </thead>
@@ -190,7 +191,9 @@ const PurchaseReport = () => {
                 <td>{item.producto_nombre}</td>
                 <td>{item.categoria_nombre}</td>
                 <td>{item.proveedor_nombre}</td>
-                <td>{item.fecha_compra}</td>
+                <td>{item.precio}</td>
+                
+                <td>{new Date(item.fecha_compra).toLocaleDateString('es-AR')}</td>
               </tr>
             );
           })}

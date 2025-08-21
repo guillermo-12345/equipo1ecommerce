@@ -83,13 +83,13 @@ export const Contact = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formTerminos">
+        {/* <Form.Group className="mb-3" controlId="formTerminos">
           <Form.Check
             type="checkbox"
             label="Aceptar Términos y Condiciones"
             required
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <Button variant="primary" type="submit" className="w-100">
           Enviar

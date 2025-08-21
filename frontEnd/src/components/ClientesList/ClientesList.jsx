@@ -81,10 +81,10 @@ const ClienteList = () => {
   }
 
   return (
-    <div>
+    <div className='table-responsive'>
       <h1>Lista de Clientes</h1>
       {user ? (<div>{error && <div className="alert alert-danger">{error}</div>}
-      <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Cliente</Button>
+      <Button onClick={() => setShowModal(true)} className="mb-2">Agregar Cliente</Button>
       
       <Table striped bordered hover>
         <thead>
@@ -103,7 +103,7 @@ const ClienteList = () => {
               <td>{cliente.correo}</td>
               <td>
                 <Button className="mx-2" onClick={() => handleEditClick(cliente)}>Editar</Button>
-                <Button onClick={() => handleDeleteCliente(cliente.cliente_id)}>Eliminar</Button>
+                <Button variant='danger' onClick={() => handleDeleteCliente(cliente.cliente_id)}>Eliminar</Button>
               </td>
             </tr>
           ))}

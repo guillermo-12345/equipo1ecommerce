@@ -5,6 +5,7 @@ const ventasController = require('../controllers/ventaController');
 
 
 router.get('/ventas', ventasController.getVentas); 
+ router.post('/ventas', ventasController.createVentas)
 
 
 

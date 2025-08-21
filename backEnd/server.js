@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.use("/", clientRoutes);
+app.use("/clientes", clientRoutes);
 app.use("/", productRoutes);
 app.use("/", proveedoresRoutes);
 app.use("/", ventaRoute);

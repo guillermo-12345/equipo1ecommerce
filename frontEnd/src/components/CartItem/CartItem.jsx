@@ -5,7 +5,7 @@
   import { CartContext } from '../../context/cartContext';
 import { Link } from 'react-router-dom'
   
-  const CartItem = ({ id,title, img, quantity, price}) => {
+  const CartItem = ({ id,title, img, quantity, price,proveedor_id}) => {
     const { removeItem } = useContext(CartContext)
 
     const handleRemoveItem = () => {
@@ -43,6 +43,7 @@ import { Link } from 'react-router-dom'
                       <td>$ {price}</td>
                       <td>{quantity}</td>
                       <td>$ {price * quantity}</td>
+                      {console.log("id proc", proveedor_id)}
                       <td>
                         <button
                           className="btn btn-danger"

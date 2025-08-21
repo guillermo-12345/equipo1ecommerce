@@ -183,6 +183,7 @@ const ProductList = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [proveedores, setProveedores] = useState([]); 
   const { user } = useAuth(); 
+  
   const fetchProducts = async () => {
     setLoading(true);
     setError(null);
@@ -285,6 +286,7 @@ const ProductList = () => {
       <div className="d-flex flex-wrap justify-content-around">
         {products.map((product) => (
           console.log(product.categoria_id),
+          console.log("watañpa2",product),
           <Item
           key={product.producto_id} 
           id={product.producto_id} 
@@ -295,6 +297,8 @@ const ProductList = () => {
           description={product.descripcion}
           category={product.categoria_id} 
           stock={product.stock} 
+          proveedor_id={product.proveedor_id}
+          proveedor_nombre={product.proveedor_nombre}
           showEditButton={true}
           showDeleteButton={true}
           onEdit={handleEditProduct} 

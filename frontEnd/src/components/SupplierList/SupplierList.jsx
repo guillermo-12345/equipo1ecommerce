@@ -82,7 +82,7 @@ const SupplierList = () => {
   }
 
   return (
-    <div>
+    <div className=''>
       <h1>Lista de Proveedores</h1>
       {user ? (<>{error && <div className="alert alert-danger">{error}</div>}
       <Button onClick={() => setShowModal(true)} className="mb-3">Agregar Proveedor</Button>
@@ -107,7 +107,7 @@ const SupplierList = () => {
               <td>{supplier.categoria_nombre}</td>
               <td>
                 <Button className="mx-2" onClick={() => handleEditClick(supplier)}>Editar</Button>
-                <Button onClick={() => handleDeleteSupplier(supplier.proveedor_id)}>Eliminar</Button>
+                <Button variant='danger' onClick={() => handleDeleteSupplier(supplier.proveedor_id)}>Eliminar</Button>
               </td>
             </tr>
           ))}

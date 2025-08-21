@@ -296,10 +296,64 @@
 
 // export default Auth;
 
+
+
+
+// import { signInWithPopup, signOut } from "firebase/auth";
+// import { auth, googleProvider } from "../service/firebaseConfig";
+// import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../context/AuthContext";
+
+// function Auth() {
+//   const navigate = useNavigate();
+//   const { login, logout } = useAuth();
+
+//   const signInWithGoogle = async () => {
+//     try {
+//       const result = await signInWithPopup(auth, googleProvider);
+//       const user = result.user;
+
+//       login({
+//         name: user.displayName,
+//         email: user.email,
+//         photo: user.photoURL,
+//       });
+
+//       localStorage.setItem("firebaseToken", user.accessToken);
+//       console.log(user.accessToken)
+     
+//       navigate("/");
+//     } catch (error) {
+//       console.error("Error al iniciar sesión", error);
+//     }
+//   };
+
+//   const handleLogout = async () => {
+//     await signOut(auth);
+//     logout();
+//     localStorage.removeItem("firebaseToken");
+//     navigate("/auth/login"); 
+//   };
+
+//   return (
+//     <div >
+//       <h1>Login</h1>
+//       <button className="btn btn-primary" onClick={signInWithGoogle}>Iniciar sesión con Google</button>
+//       <button className="btn btn-danger" onClick={handleLogout}>Cerrar sesión</button>
+//     </div>
+//   );
+// }
+
+// export default Auth;
+
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
 function Auth() {
   const navigate = useNavigate();
@@ -314,6 +368,12 @@ function Auth() {
         name: user.displayName,
         email: user.email,
         photo: user.photoURL,
+      });
+
+      await axios.post("http://localhost:3000/clientes/firebase", {
+        uid: user.uid,
+        nombre: user.displayName,
+        correo: user.email
       });
 
       localStorage.setItem("firebaseToken", user.accessToken);
@@ -333,13 +393,28 @@ function Auth() {
   };
 
   return (
-    <div >
-      <h1>Login</h1>
-      <button className="btn btn-primary" onClick={signInWithGoogle}>Iniciar sesión con Google</button>
-      <button className="btn btn-danger" onClick={handleLogout}>Cerrar sesión</button>
+     <div className="d-flex justify-content-center align-items-center vh-100">
+      <Card className="p-4 shadow-lg text-center" style={{ minWidth: "300px" }}>
+        <Card.Body>
+          <Card.Title className="mb-4">Iniciar Sesión</Card.Title>
+          <Button
+            variant="primary"
+            onClick={signInWithGoogle}
+            className="mb-3 w-100"
+          >
+            Iniciar sesión con Google
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleLogout}
+            className="w-100"
+          >
+            Cerrar sesión
+          </Button>
+        </Card.Body>
+      </Card>
     </div>
   );
 }
 
 export default Auth;
-

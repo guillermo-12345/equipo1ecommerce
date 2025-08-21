@@ -189,6 +189,7 @@
 
 // export default ProductFormModal;
 
+
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -203,7 +204,7 @@ const ProductFormModal = ({ product, show, handleClose, onSave, proveedores }) =
     imagen: '',
     categoria_id: '',
     stock: '',
-    proveedor_id: ''
+    proveedor_id: '',
   });
 
   const [filteredProveedores, setFilteredProveedores] = useState([]); 
@@ -218,7 +219,7 @@ const ProductFormModal = ({ product, show, handleClose, onSave, proveedores }) =
         imagen: product.imagen,
         categoria_id: product.categoria_id,
         stock: product.stock,
-        proveedor_id: product.proveedor_id || ''
+        proveedor_id: product.proveedor_id || null
       });
     }
   }, [product]);

@@ -7,7 +7,7 @@ function ItemDetailContainer(){
     const [productDetail, setProductDetail] = useState(null)
     const [loading, setLoading] = useState(true)
     const {itemId} = useParams()
-    console.log(itemId)
+    console.log("itemid",itemId)
 
     useEffect(()=>{
         axios.get(`http://localhost:3000/productos/${itemId}`)
@@ -27,7 +27,7 @@ function ItemDetailContainer(){
       if (!productDetail) {
         return <div>
             {
-                console.log(itemId)
+                console.log("item id", itemId)
             }
         </div>
 
@@ -43,8 +43,10 @@ function ItemDetailContainer(){
               price={productDetail.precio_venta}
               img={productDetail.imagen}
               stock={productDetail.stock}
+              proveedor_id={productDetail.proveedor_id}
+              producto_id={productDetail.producto_id}
              />
-    
+             {console.log("sss", productDetail.categoria_id)} 
         </div>
     );
 }
