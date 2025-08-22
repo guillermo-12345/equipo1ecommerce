@@ -146,6 +146,7 @@ import Card from 'react-bootstrap/Card';
 import { Link, useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
+import API_URL from '../config/config';
 
 const ItemListContainer = () => {
     const [productos, setProductos] = useState([]);
