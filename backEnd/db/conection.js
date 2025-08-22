@@ -1,26 +1,16 @@
 const mysql = require('mysql2');
-require('dotenv').config({path: './.env'});
+// require('dotenv').config({path: './.env'});
 
 
 const dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT ||3006,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'MordoDB',
-    database: process.env.DB_NAME || 'dbtp5'
+    host: process.env.DB_HOST ,
+    port: process.env.DB_PORT ,
+    user: process.env.DB_USER ,
+    password: process.env.DB_PASSWORD ,
+    database: process.env.DB_NAME 
    
 };
 
-/*
-const dbConfig = {
-    host: 'localhost',
-    port: '3306',
-    user: 'root',
-    password: 'MordoDB',
-    database: 'dbtp5'
-   
-};
-*/
 const conexion = mysql.createConnection(dbConfig);
 
 conexion.connect(function(err) {
@@ -32,3 +22,14 @@ conexion.connect(function(err) {
 });
 
 module.exports = conexion;
+
+/*
+const dbConfig = {
+    host: 'localhost',
+    port: '3306',
+    user: 'root',
+    password: 'MordoDB',
+    database: 'dbtp5'
+   
+};
+*/
