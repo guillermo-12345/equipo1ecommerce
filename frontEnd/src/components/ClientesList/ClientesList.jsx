@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import { useAuth } from "../context/AuthContext"; 
 import { Navigate } from 'react-router-dom';
+import API_URL from '../config/config';
 
 const ClienteList = () => {
   const [clientes, setClientes] = useState([]);
@@ -21,7 +22,7 @@ const ClienteList = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:3000/clientes');
+      const response = await axios.get(`${API_URL}/clientes`);
       setClientes(response.data);
     } catch (error) {
       console.error('Error fetching clients:', error);
@@ -33,7 +34,7 @@ const ClienteList = () => {
 
   const handleAddCliente = async (cliente) => {
     try {
-      await axios.post('http://localhost:3000/cliente', cliente);
+      await axios.post(`${API_URL}/cliente`, cliente);
       await fetchClientes(); // Recargar la lista completa
     } catch (error) {
       console.error('Error adding client:', error);
@@ -45,7 +46,7 @@ const ClienteList = () => {
 
   const handleUpdateCliente = async (id, updatedCliente) => {
     try {
-      await axios.put(`http://localhost:3000/clientes/${id}`, updatedCliente);
+      await axios.put(`${API_URL}/clientes/${id}`, updatedCliente);
       await fetchClientes(); // Recargar la lista completa
     } catch (error) {
       console.error('Error updating client:', error);
@@ -58,7 +59,7 @@ const ClienteList = () => {
 
   const handleDeleteCliente = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/clientes/${id}`);
+      await axios.delete(`${API_URL}/clientes/${id}`);
       await fetchClientes(); // Recargar la lista completa
     } catch (error) {
       console.error('Error deleting client:', error);
