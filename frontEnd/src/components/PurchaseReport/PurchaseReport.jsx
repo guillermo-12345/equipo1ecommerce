@@ -3,6 +3,7 @@ import ApexCharts from "apexcharts";
 import { Table, Form, Button, Row, FormSelect } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import { Navigate } from 'react-router-dom';
+import API_URL from "../config/config";
 
 const PurchaseReport = () => {
   const [allData, setAllData] = useState([]);
@@ -20,7 +21,7 @@ const PurchaseReport = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/compras");
+        const response = await fetch(`${API_URL}/compras`);
         const data = await response.json();
         setAllData(data);
         setFilteredData(data);

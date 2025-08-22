@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import { useAuth } from "../context/AuthContext"; 
 import { Navigate } from 'react-router-dom';
+import API_URL from '../config/config';
 
 const SupplierList = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -22,7 +23,7 @@ const SupplierList = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:3000/proveedores'); 
+      const response = await axios.get(`${API_URL}/proveedores`); 
       setSuppliers(response.data);
     } catch (error) {
       console.error('Error fetching suppliers:', error);
@@ -34,7 +35,7 @@ const SupplierList = () => {
 
   const handleAddSupplier = async (supplier) => {
     try {
-      await axios.post('http://localhost:3000/proveedor', supplier); 
+      await axios.post(`${API_URL}/proveedor`, supplier); 
       await fetchSuppliers(); 
     } catch (error) {
       console.error('Error adding supplier:', error);
@@ -46,7 +47,7 @@ const SupplierList = () => {
 
   const handleUpdateSupplier = async (id, updatedSupplier) => {
     try {
-      await axios.put(`http://localhost:3000/proveedor/${id}`, updatedSupplier); 
+      await axios.put(`${API_URL}/proveedor/${id}`, updatedSupplier); 
       await fetchSuppliers(); 
     } catch (error) {
       console.error('Error updating supplier:', error);
@@ -59,7 +60,7 @@ const SupplierList = () => {
 
   const handleDeleteSupplier = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/proveedor/${id}`); 
+      await axios.delete(`${API_URL}/proveedor/${id}`); 
       await fetchSuppliers(); 
     } catch (error) {
       console.error('Error deleting supplier:', error);

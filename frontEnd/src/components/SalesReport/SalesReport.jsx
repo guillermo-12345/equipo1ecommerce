@@ -3,6 +3,7 @@ import ApexCharts from "apexcharts";
 import { Table, Form, Button, Row } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import { Navigate } from 'react-router-dom';
+import API_URL from "../config/config";
 
 const SalesReport = () => {
   const [filteredData, setFilteredData] = useState([]);
@@ -17,7 +18,7 @@ const SalesReport = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/ventas");
+        const response = await fetch(`${API_URL}/ventas`);
         const data = await response.json();
         setFilteredData(data);
       } catch (error) {

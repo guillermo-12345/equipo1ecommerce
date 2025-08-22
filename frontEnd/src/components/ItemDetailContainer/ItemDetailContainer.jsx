@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ItemDetail from "../ItemDetail/ItemDetail"
+import API_URL from "../config/config";
 
 function ItemDetailContainer(){
     const [productDetail, setProductDetail] = useState(null)
@@ -10,7 +11,7 @@ function ItemDetailContainer(){
     console.log("itemid",itemId)
 
     useEffect(()=>{
-        axios.get(`http://localhost:3000/productos/${itemId}`)
+        axios.get(`${API_URL}/productos/${itemId}`)
         .then((response) => {
             setProductDetail(response.data)
             setLoading(false)

@@ -161,7 +161,7 @@ const ItemListContainer = () => {
     useEffect(() => {
         const fetchProductos = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/productos');
+                const response = await axios.get(`${API_URL}/productos`);
                 const allProducts = response.data;
 
               

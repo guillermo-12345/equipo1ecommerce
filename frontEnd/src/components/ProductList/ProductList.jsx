@@ -172,8 +172,8 @@ import axios from 'axios';
 import Item from '../Item/Item';
 import ProductFormModal from '../ProductForm/ProductForm'; 
 import Button from 'react-bootstrap/Button';
-import { useAuth } from "../context/AuthContext"; 
-import { Navigate } from 'react-router-dom';
+import API_URL from '../config/config'
+
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -182,13 +182,12 @@ const ProductList = () => {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [proveedores, setProveedores] = useState([]); 
-  const { user } = useAuth(); 
-  
+
   const fetchProducts = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:3000/productos');
+      const response = await axios.get(`${API_URL}/productos`);
       setProducts(response.data);
     } catch (error) {
       console.error('Error al obtener los productos:', error);
@@ -200,7 +199,7 @@ const ProductList = () => {
 
   const fetchProveedores = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/proveedores');
+      const response = await axios.get(`${API_URL}/proveedores`);
       setProveedores(response.data);
     } catch (error) {
       console.error('Error al obtener los proveedores:', error);
@@ -216,7 +215,7 @@ const ProductList = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.delete(`http://localhost:3000/productos/${id}`);
+      await axios.delete(`${API_URL}/productos/${id}`);
       setProducts((prevProducts) => prevProducts.filter((product) => product.producto_id !== id));
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
@@ -237,7 +236,7 @@ const ProductList = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.put(`http://localhost:3000/productos/${id}`, updatedProduct);
+      await axios.put(`${API_URL}/productos/${id}`, updatedProduct);
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.producto_id === id ? { ...product, ...updatedProduct } : product
@@ -257,7 +256,7 @@ const ProductList = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.post('http://localhost:3000/productos', newProduct);
+      await axios.post(`${API_URL}/productos`, newProduct);
       await fetchProducts();
     } catch (error) {
       console.error('Error al agregar el producto:', error);
@@ -272,21 +271,18 @@ const ProductList = () => {
     setEditProduct(null); 
     setIsEditing(false);
     setShowModal(true); 
-    
   };
 
   if (loading) {
     return <div>Loading...</div>;
   }
- 
+
   return (
     <div className="product-list-container">
       <h2>Lista de Productos</h2>
-      {user ? (<div>{error && <div className="alert alert-danger">{error}</div>} 
+      {error && <div className="alert alert-danger">{error}</div>} 
       <div className="d-flex flex-wrap justify-content-around">
         {products.map((product) => (
-          console.log(product.categoria_id),
-          console.log("watañpa2",product),
           <Item
           key={product.producto_id} 
           id={product.producto_id} 
@@ -295,18 +291,14 @@ const ProductList = () => {
           price={product.precio_venta}
           purchasePrice={product.precio_compra}
           description={product.descripcion}
-          category={product.categoria_id} 
+          category={product.categoria} 
           stock={product.stock} 
-          proveedor_id={product.proveedor_id}
-          proveedor_nombre={product.proveedor_nombre}
           showEditButton={true}
           showDeleteButton={true}
           onEdit={handleEditProduct} 
           onDelete={handleDeleteProduct}
           className="product-item"
           />
-
-          
         ))}
       </div>
       <Button variant="primary" onClick={handleAddButtonClick}>
@@ -318,11 +310,7 @@ const ProductList = () => {
         product={editProduct}
         onSave={isEditing ? handleUpdateProduct : handleAddProduct}
         proveedores={proveedores} 
-      /></div> ): ( <><div className="alert alert-warning" role="alert">
-        Necesitaslogueartepara ver este sitio
-      </div>
-      {<Navigate to="/" />}</>)}
-      
+      />
     </div>
   );
 };
