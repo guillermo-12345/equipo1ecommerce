@@ -348,6 +348,7 @@
 
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import API_URL from '../config/config'
 
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../service/firebaseConfig";
@@ -370,7 +371,7 @@ function Auth() {
         photo: user.photoURL,
       });
 
-      await axios.post("http://localhost:3000/clientes/firebase", {
+      await axios.post(`${API_URL}/clientes/firebase`, {
         uid: user.uid,
         nombre: user.displayName,
         correo: user.email
