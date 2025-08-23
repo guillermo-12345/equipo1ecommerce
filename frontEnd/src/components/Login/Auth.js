@@ -440,7 +440,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import API_URL from '../config/config'
 
-import { signInWithPopup, signOut } from "firebase/auth";
+import { signInWithRedirect, signOut } from "firebase/auth";
 import { auth, googleProvider } from "../service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -452,7 +452,7 @@ function Auth() {
 
   const signInWithGoogle = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
+      const result = await signInWithRedirect(auth, googleProvider);
       const user = result.user;
 
       login({
