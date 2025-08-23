@@ -1,6 +1,9 @@
+console.log("Dominio actual:", window.location.origin);
+
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyByMb5GwMMb1_T40lx-V5bWx1Y4pfOAw7Q",
